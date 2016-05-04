@@ -5,8 +5,8 @@
         .module('kmd-datetimepicker')
         .controller('datetimepickerController', datetimepickerController);
 
-    datetimepickerController.$inject = ['$scope', '$compile', '$document', '$templateRequest', 'FORMATS', 'VIEW_LEVELS'];
-    function datetimepickerController($scope, $compile, $document, $templateRequest, FORMATS, VIEW_LEVELS) {
+    datetimepickerController.$inject = ['$scope', '$compile', '$document', '$templateRequest', 'FORMATS', 'VIEW_LEVELS', 'TEMPLATES'];
+    function datetimepickerController($scope, $compile, $document, $templateRequest, FORMATS, VIEW_LEVELS, TEMPLATES) {
         var vm = this;
         
         vm.defaults = {
@@ -24,7 +24,10 @@
             daysOfWeek: null,
             daysOnCalendar: null,
             months: null,
-            years: null
+            years: null,
+            
+            template: TEMPLATES.Date,
+            dateSelectionTemplate: TEMPLATES.DatePart.Day
         });
         
         //Exposing functions
@@ -36,10 +39,6 @@
             datepickerNext: datepickerNext,
             datepickerPrevious: datepickerPrevious
         });
-        
-        //Testing
-        vm.template = '/source/templates/datepicker.html';
-        vm.dateSelectionTemplate = '/source/templates/datepicker.day.html';
 
         activate();
 
@@ -59,7 +58,7 @@
             //else throw error 'option not supported'
         }
         function generateTemplate() {
-            $templateRequest('/source/templates/picker_container.html').then(function(html) {
+            $templateRequest(TEMPLATES.Base).then(function(html) {
                 var picker = $compile(html)($scope);
                 $document.find('body').append(picker); 
             });
@@ -183,12 +182,12 @@
             switch(vm.currents.datepickerViewLevel) {
                 case VIEW_LEVELS.Date.Day:
                     vm.currents.datepickerViewLevel = VIEW_LEVELS.Date.Month;
-                    vm.dateSelectionTemplate = VIEW_LEVELS.DateTemplates[vm.currents.datepickerViewLevel];
+                    vm.dateSelectionTemplate = TEMPLATES.DatePart[vm.currents.datepickerViewLevel];
                     updateDatepickerSwitchLabel();
                     break;
                 case VIEW_LEVELS.Date.Month:
                     vm.currents.datepickerViewLevel = VIEW_LEVELS.Date.Year;
-                    vm.dateSelectionTemplate = VIEW_LEVELS.DateTemplates[vm.currents.datepickerViewLevel];
+                    vm.dateSelectionTemplate = TEMPLATES.DatePart[vm.currents.datepickerViewLevel];
                     generateYears();
                     updateDatepickerSwitchLabel();
                     break;
@@ -197,7 +196,7 @@
         function increaseDatepickerViewLevel() {
             if(vm.currents.datepickerViewLevel + 1 <= 2) {
                 vm.currents.datepickerViewLevel += 1;
-                vm.dateSelectionTemplate = VIEW_LEVELS.DateTemplates[vm.currents.datepickerViewLevel];
+                vm.dateSelectionTemplate = TEMPLATES.DatePart[vm.currents.datepickerViewLevel];
                 updateDatepickerSwitchLabel();
             }
         }
