@@ -11,6 +11,7 @@
         
         vm.defaults = {
             startOfWeek: 0,
+            outputFormat: FORMATS.DefaultOutput
         };
         vm.currents = {
             date: moment(),
@@ -43,13 +44,17 @@
         activate();
 
         function activate() {
-             applyOptions();
-             generateTemplate();
-             generateDaysOfWeek();
-             generateMonths();
-             generateDaysInMonth();
+            console.log(vm);
+            console.log(vm.ngModel);
+            
+            applyOptions();
+            generateTemplate();
+            generateDaysOfWeek();
+            generateMonths();
+            generateDaysInMonth();
              
-             updateDatepickerSwitchLabel();
+            updateDatepickerSwitchLabel();
+            updateModel();
         }
         
         function applyOptions() {
@@ -116,12 +121,10 @@
             var end = generateEndOfMonth();            
             
             while(begin.diff(end, 'days') < 0) {
-                var date = begin.format(FORMATS.DateFormat);
-                
                 temp[temp.length] = {
                     label: begin.date(),
-                    date: date,
-                    inSelectedMonth: moment(date, FORMATS.DateFormat).month() - vm.currents.viewDate.month() === 0       
+                    date: begin.clone(),
+                    inSelectedMonth: begin.clone().month() - vm.currents.viewDate.month() === 0       
                 };
                 
                 begin.add(1, 'days');
@@ -174,6 +177,9 @@
                     break;
             }
         }
+        function updateModel() {
+            vm.ngModel = vm.currents.date.format(vm.defaults.outputFormat);
+        }
         
         //Functionality
         function decreaseDatepickerViewLevel($event) {
@@ -200,19 +206,32 @@
                 updateDatepickerSwitchLabel();
             }
         }
-        function selectYear(year) {
-            vm.currents.date.set('year', year);
+        function selectYear($event, year) {
+            $event.preventDefault();
+            
+            vm.currents.viewDate.set('year', year);
+            vm.currents.date = vm.currents.viewDate.clone();
+            updateModel();
+            
             increaseDatepickerViewLevel();
         }
-        function selectMonth(month) {
+        function selectMonth($event, month) {
+            $event.preventDefault();
+            
             vm.currents.viewDate.set('month', month);
             vm.currents.date = vm.currents.viewDate.clone();
+            updateModel();
             
             increaseDatepickerViewLevel();
             generateDaysInMonth();
         }
-        function selectDay(day) {
-            vm.currents.date.set('day', day);
+        function selectDay($event, day) {
+            $event.preventDefault();
+            
+            vm.currents.viewDate.set('date', day.date());
+            vm.currents.viewDate.set('month', day.month());
+            vm.currents.date = vm.currents.viewDate.clone();
+            updateModel();            
         }
         function datepickerNext($event) {
             $event.preventDefault();
