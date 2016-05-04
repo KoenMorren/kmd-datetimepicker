@@ -8,6 +8,8 @@
     border: 1px solid lightgrey;
     border-radius: 4px;
     
+    -webkit-user-select: none;
+    
     width: 15em;
 }
 .kmd-datetimepicker:before {
@@ -37,7 +39,7 @@
 .kmd-row {
     overflow: hidden;
     clear: both;
-    margin: 0 0 4px 0;
+    margin: 0 0 6px 0;
 }
 .kmd-row:last-child {
     margin: 0; 
@@ -72,19 +74,23 @@
     width: calc(100% - 12px);
 }
 
-.kmd-datepicker-day {
+table {
     width: 100%;
     table-layout: fixed;
     border-collapse: collapse;
 }
-.kmd-datepicker-day th {
-    -webkit-user-select: none;
+table th {
     cursor: default;
 }
-.kmd-datepicker-day td { 
+table td { 
     text-align: center;
 }
-.kmd-datepicker-day td .kmd-button { 
+table td .kmd-button { 
     width: 100%;
-    padding: 4px 0;
+    padding: 6px 0;
+}
+.kmd-datepicker-month td .kmd-button,
+.kmd-datepicker-year td .kmd-button { 
+    width: 100%;
+    padding: 12px 0;
 }

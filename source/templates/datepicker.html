@@ -1,22 +1,19 @@
 <div class="kmd-datepicker">
     <div class="kmd-row">
-        <div class="kmd-button kmd-prev">
-            <!--
-                ng-mousedown
-            -->
+        <div class="kmd-button kmd-prev"
+             data-ng-mousedown="vm.datepickerPrevious($event)">
             <i class="fa fa-fw fa-chevron-left"></i>
         </div>
-        <div class="kmd-button kmd-switch">
+        <div class="kmd-button kmd-switch"
+             data-ng-mousedown="vm.decreaseDatepickerViewLevel($event)"
+             data-ng-bind="vm.currents.datepickerSwitchLabel">
             <!--
                 ng-mousedown
                 ng-bind
              -->
-             May 2016
         </div>
-        <div class="kmd-button kmd-next">
-            <!--
-                ng-mousedown
-            -->
+        <div class="kmd-button kmd-next"
+             data-ng-mousedown="vm.datepickerNext($event)">
             <i class="fa fa-fw fa-chevron-right"></i>
         </div>
     </div>
