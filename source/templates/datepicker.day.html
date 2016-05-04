@@ -1,0 +1,18 @@
+<table class="kmd-datepicker-day">
+    <tr>
+        <th data-ng-repeat="day in vm.daysOfWeek" data-ng-bind="day"> <!-- ng-repeat over vm.daysOfWeek -->
+           <!--
+               ng-bind
+           -->
+        </th>
+    </tr>
+    <tr data-ng-repeat="week in vm.daysOnCalendar">
+        <td data-ng-repeat="day in week">
+            <div class="kmd-button" data-ng-bind="day.label" data-ng-style="{color: day.inSelectedMonth ? 'black' : 'red'}"></div>
+            <!-- 
+                ng-bind
+                ng-mousedown
+            -->
+        </td>
+    </tr>
+</table>

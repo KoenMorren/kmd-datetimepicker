@@ -1,0 +1,22 @@
+{
+  "name": "komodo-angular-datetimepicker",
+  "version": "1.0.0",
+  "description": "An AngularJs implementation of a datetimepicker",
+  "main": "index.js",
+  "dependencies": {
+    "angular": "^1.5.5",
+    "font-awesome": "^4.6.1",
+    "moment": "^2.13.0"
+  },
+  "devDependencies": {},
+  "keywords": [
+    "twitter-bootstrap",
+    "bootstrap",
+    "datepicker",
+    "datetimepicker",
+    "timepicker",
+    "moment"
+  ],
+  "author": "Koen Morren",
+  "license": "MIT"
+}

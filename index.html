@@ -1,0 +1,32 @@
+<html ng-app="test">
+    <head>
+        <title>AngularJs - Date/Timepicker</title>
+        
+        <link rel="stylesheet" href="./source/css/datetimepicker.css">
+        <link rel="stylesheet" href="./node_modules/font-awesome/css/font-awesome.css">
+    </head>
+    <body>
+        <div ng-controller="testController as vm">
+            <input type="text" datetimepicker datetimepicker-options="vm.properties" />
+        </div>
+        
+        <script src="./node_modules/angular/angular.min.js"></script>
+        <script src="./node_modules/moment/moment.js"></script>
+        
+        <script src="./source/js/datetimepicker.module.js"></script>
+        <script src="./source/js/datetimepicker.controller.js"></script>
+        <script src="./source/js/datetimepicker.directive.js"></script>
+        
+        <script>
+            angular.module('test', ['kmd-datetimepicker'])
+                   .controller('testController', function() {
+                       var vm = this;
+                       
+                       vm.properties = {
+                           name: '1',
+                           kind: '2'   
+                       };
+                   });
+        </script>
+    </body>
+</html>
