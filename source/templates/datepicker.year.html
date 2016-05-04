@@ -3,7 +3,7 @@
         <td data-ng-repeat="year in trimester">
             <div class="kmd-button"
                  data-ng-bind="year.label"
-                 data-ng-mousedown="vm.selectYear(year.year)">
+                 data-ng-mousedown="vm.selectYear($event, year.year)">
             </div> 
         </td>
     </tr>

@@ -8,11 +8,11 @@
     </tr>
     <tr data-ng-repeat="week in vm.daysOnCalendar">
         <td data-ng-repeat="day in week">
-            <div class="kmd-button" data-ng-bind="day.label" data-ng-style="{color: day.inSelectedMonth ? 'black' : 'red'}"></div>
-            <!-- 
-                ng-bind
-                ng-mousedown
-            -->
+            <div class="kmd-button" 
+                 data-ng-bind="day.label" 
+                 data-ng-style="{color: day.inSelectedMonth ? 'black' : 'red'}"
+                 data-ng-mousedown="vm.selectDay($event, day.date)">
+            </div>
         </td>
     </tr>
 </table>
