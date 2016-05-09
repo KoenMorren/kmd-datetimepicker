@@ -28,7 +28,10 @@
             years: null,
             
             template: TEMPLATES.Date,
-            dateSelectionTemplate: TEMPLATES.DatePart.Day
+            dateSelectionTemplate: TEMPLATES.DatePart.Day,
+                        
+            isCurrentDay: isCurrentDay,
+            isSelectedDay: isSelectedDay
         });
         
         //Exposing functions
@@ -124,7 +127,7 @@
                 temp[temp.length] = {
                     label: begin.date(),
                     date: begin.clone(),
-                    inSelectedMonth: begin.clone().month() - vm.currents.viewDate.month() === 0       
+                    inSelectedMonth: begin.clone().month() - vm.currents.viewDate.month() === 0
                 };
                 
                 begin.add(1, 'days');
@@ -177,6 +180,12 @@
                     break;
             }
         }
+        function isCurrentDay(day) {
+            return day.isSame(moment(), 'day');
+        }
+        function isSelectedDay(day) {
+            return day.isSame(vm.currents.viewDate, 'day');
+        }
         function updateModel() {
             vm.ngModel = vm.currents.date.format(vm.defaults.outputFormat);
         }
@@ -228,8 +237,9 @@
         function selectDay($event, day) {
             $event.preventDefault();
             
-            vm.currents.viewDate.set('date', day.date());
+            vm.currents.viewDate.set('year', day.year());
             vm.currents.viewDate.set('month', day.month());
+            vm.currents.viewDate.set('date', day.date());
             vm.currents.date = vm.currents.viewDate.clone();
             updateModel();            
         }
