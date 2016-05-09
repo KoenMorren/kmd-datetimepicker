@@ -11,6 +11,7 @@
         
         vm.defaults = {
             startOfWeek: 0,
+            disableWeekdays: [0],
             outputFormat: FORMATS.DefaultOutput
         };
         vm.currents = {
@@ -31,7 +32,8 @@
             dateSelectionTemplate: TEMPLATES.DatePart.Day,
                         
             isCurrentDay: isCurrentDay,
-            isSelectedDay: isSelectedDay
+            isSelectedDay: isSelectedDay,
+            isDisabled: isDisabled
         });
         
         //Exposing functions
@@ -47,10 +49,7 @@
 
         activate();
 
-        function activate() {
-            console.log(vm);
-            console.log(vm.ngModel);
-            
+        function activate() {            
             applyOptions();
             generateTemplate();
             generateDaysOfWeek();
@@ -81,6 +80,23 @@
                 index = ++index%7;
             } while(index !== vm.defaults.startOfWeek)
         }
+        function generateYears() {
+            vm.currents.minYear = vm.currents.viewDate.year() - 5;
+            vm.currents.maxYear = vm.currents.viewDate.year() + 6;
+            vm.years = [];
+            
+            for(var i = 0; i < 3; i++) {
+                vm.years[i] = [];    
+                for(var j = 0; j < 4; j++) {
+                    var year = vm.currents.minYear + (i * 4) + j;
+                    
+                    vm.years[i][j] = {
+                        label: year,
+                        year: year
+                    }; 
+                }
+            }
+        }
         function generateMonths() {
             if(vm.defaults.alternativeMonthLabels) {
                 //TODO
@@ -100,23 +116,6 @@
                 }
             }
         }
-        function generateYears() {
-            vm.currents.minYear = vm.currents.viewDate.year() - 5;
-            vm.currents.maxYear = vm.currents.viewDate.year() + 6;
-            vm.years = [];
-            
-            for(var i = 0; i < 3; i++) {
-                vm.years[i] = [];    
-                for(var j = 0; j < 4; j++) {
-                    var year = vm.currents.minYear + (i * 4) + j;
-                    
-                    vm.years[i][j] = {
-                        label: year,
-                        year: year
-                    }; 
-                }
-            }
-        }
         function generateDaysInMonth() {
             var temp = [];
             vm.daysOnCalendar = [];
@@ -128,7 +127,8 @@
                 temp[temp.length] = {
                     label: begin.date(),
                     date: begin.clone(),
-                    inSelectedMonth: begin.clone().month() - vm.currents.viewDate.month() === 0
+                    inSelectedMonth: begin.clone().month() - vm.currents.viewDate.month() === 0,
+                    isDisabled: isDisabled(begin.clone())
                 };
                 
                 begin.add(1, 'days');
@@ -187,6 +187,18 @@
         function isSelectedDay(day) {
             return day.isSame(vm.currents.viewDate, 'day');
         }
+        function isDisabled(day) {
+            //check if not < mindate
+            var minDateBlock = false;
+            
+            //check if > maxdate
+            var maxDateBlock = false;
+            
+            //check if day.day() not in vm.defaults.disableWeekdays
+            var weekdayBlock = vm.defaults.disableWeekdays.indexOf(day.day()) !== -1;
+            
+            return minDateBlock || maxDateBlock || weekdayBlock;
+        }
         function updateModel() {
             vm.ngModel = vm.currents.date.format(vm.defaults.outputFormat);
         }
@@ -235,14 +247,16 @@
             increaseDatepickerViewLevel();
             generateDaysInMonth();
         }
-        function selectDay($event, day) {
+        function selectDay($event, isDisabled, day) {
             $event.preventDefault();
             
-            vm.currents.viewDate.set('year', day.year());
-            vm.currents.viewDate.set('month', day.month());
-            vm.currents.viewDate.set('date', day.date());
-            vm.currents.date = vm.currents.viewDate.clone();
-            updateModel();            
+            if(!isDisabled) {
+                vm.currents.viewDate.set('year', day.year());
+                vm.currents.viewDate.set('month', day.month());
+                vm.currents.viewDate.set('date', day.date());
+                vm.currents.date = vm.currents.viewDate.clone();
+                updateModel();   
+            }            
         }
         function datepickerNext($event) {
             $event.preventDefault();
