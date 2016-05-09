@@ -12,7 +12,8 @@
                    Month: '/source/templates/datepicker.month.html',
                    2: '/source/templates/datepicker.day.html',
                    Day: '/source/templates/datepicker.day.html'
-               }
+               },
+               Time: '/source/templates/timepicker.html'
            })
            .constant('FORMATS', {
                DateFormat: 'DD-MM-YYYY',
