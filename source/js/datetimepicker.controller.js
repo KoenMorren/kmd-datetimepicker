@@ -321,8 +321,7 @@
             updateDatepickerSwitchLabel();
         }
         function switchMode($event, mode) {
-            if($event)
-                $event.preventDefault();
+            $event.preventDefault();
             
             switch(mode) {
                 case 'date':
@@ -494,10 +493,12 @@
             return rows;
         }
 
-        function setValue(granularity, val) {
+        function setValue($event, granularity, val) {
+            $event.preventDefault();
+            
             vm.currents.date.set(granularity, val);
             updateModel();
-            switchMode(null, 'time');
+            switchMode($event, 'time');
         }
     }
 })();
