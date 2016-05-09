@@ -45,9 +45,17 @@
         
         vm.defaults = {
             startOfWeek: 0,
-            disableWeekdays: [0],
-            outputFormat: FORMATS.DefaultOutput
+            outputFormat: FORMATS.DefaultOutput,
+            //timepicker
+            time: {
+                stepping: {
+                    m: 5,
+                    s: 1
+                }
+            }, 
+            usePeriod: true
         };
+        
         vm.currents = {
             date: moment(),
             viewDate: moment(),
@@ -67,7 +75,18 @@
                         
             isCurrentDay: isCurrentDay,
             isSelectedDay: isSelectedDay,
-            isDisabled: isDisabled
+            isDisabled: isDisabled,
+            
+            //timepicker
+            hasDate: hasDate,
+            hasTime: hasTime,
+            isEnabled: isEnabled,
+            increment: increment,
+            decrement: decrement,
+            getCurrent: getCurrent,
+            togglePeriod: togglePeriod,
+            getCurrentPeriod: getCurrentPeriod,
+            getColumnWidthClass: getColumnWidthClass
         });
         
         //Exposing functions
@@ -98,6 +117,8 @@
             //loop over all options in vm.options
             //if key in vm.options also exists in vm.defaults, overwrite value
             //else throw error 'option not supported'
+            
+            vm.defaults.usePeriod = !has24Hours();
         }
         function generateTemplate() {
             $templateRequest(TEMPLATES.Base).then(function(html) {
@@ -113,23 +134,6 @@
                 vm.daysOfWeek[vm.daysOfWeek.length] = moment().day(index).format('dd');
                 index = ++index%7;
             } while(index !== vm.defaults.startOfWeek)
-        }
-        function generateYears() {
-            vm.currents.minYear = vm.currents.viewDate.year() - 5;
-            vm.currents.maxYear = vm.currents.viewDate.year() + 6;
-            vm.years = [];
-            
-            for(var i = 0; i < 3; i++) {
-                vm.years[i] = [];    
-                for(var j = 0; j < 4; j++) {
-                    var year = vm.currents.minYear + (i * 4) + j;
-                    
-                    vm.years[i][j] = {
-                        label: year,
-                        year: year
-                    }; 
-                }
-            }
         }
         function generateMonths() {
             if(vm.defaults.alternativeMonthLabels) {
@@ -150,6 +154,23 @@
                 }
             }
         }
+        function generateYears() {
+            vm.currents.minYear = vm.currents.viewDate.year() - 5;
+            vm.currents.maxYear = vm.currents.viewDate.year() + 6;
+            vm.years = [];
+            
+            for(var i = 0; i < 3; i++) {
+                vm.years[i] = [];    
+                for(var j = 0; j < 4; j++) {
+                    var year = vm.currents.minYear + (i * 4) + j;
+                    
+                    vm.years[i][j] = {
+                        label: year,
+                        year: year
+                    }; 
+                }
+            }
+        }
         function generateDaysInMonth() {
             var temp = [];
             vm.daysOnCalendar = [];
@@ -161,8 +182,7 @@
                 temp[temp.length] = {
                     label: begin.date(),
                     date: begin.clone(),
-                    inSelectedMonth: begin.clone().month() - vm.currents.viewDate.month() === 0,
-                    isDisabled: isDisabled(begin.clone())
+                    inSelectedMonth: begin.clone().month() - vm.currents.viewDate.month() === 0
                 };
                 
                 begin.add(1, 'days');
@@ -219,7 +239,7 @@
             return day.isSame(moment(), 'day');
         }
         function isSelectedDay(day) {
-            return day.isSame(vm.currents.viewDate, 'day');
+            return day.isSame(vm.currents.date, 'day');
         }
         function isDisabled(day) {
             //check if not < mindate
@@ -337,14 +357,132 @@
                 case 'date':
                     vm.template = TEMPLATES.Date;
                     vm.dateSelectionTemplate = TEMPLATES.DatePart.Day;
+                    vm.currents.datepickerViewLevel = VIEW_LEVELS.Date.Day;
+                    updateDatepickerSwitchLabel();
+                    generateDaysInMonth();
                     break;
                 case 'time':
                     vm.template = TEMPLATES.Time;
                     break;
             }
         }
+    
+        //timepicker
+        function hasDate() {
+            return (isEnabled('y') || isEnabled('M') || isEnabled('d'));
+        }
+
+        function hasTime() {
+            return (isEnabled('h') || isEnabled('m') || isEnabled('s'));
+        }
+
+        function has24Hours() {
+            return vm.defaults.outputFormat.indexOf('H') !== -1;
+        }
+
+        function isEnabled(granularity) {
+            if (!isValid(granularity)) 
+                return;
+                
+            switch (granularity) {
+                case 'y':
+                    return vm.defaults.outputFormat.toLowerCase().indexOf(granularity) !== -1;
+                case 'M':
+                    return vm.defaults.outputFormat.indexOf(granularity) !== -1;
+                case 'd':
+                    return vm.defaults.outputFormat.toLowerCase().indexOf(granularity) !== -1;
+                case 'h':
+                    return vm.defaults.outputFormat.toLowerCase().indexOf(granularity) !== -1;
+                case 'm':
+                    return vm.defaults.outputFormat.indexOf(granularity) !== -1;
+                case 's':
+                    return vm.defaults.outputFormat.indexOf(granularity) !== -1;
+                default:
+                    return false;
+            }
+        }
+
+        function isValid(granularity) {
+            if (typeof granularity !== 'string' || granularity.length > 1) {
+                throw new TypeError('isEnabled expects a single character string parameter');
+            } else {
+                return true;
+            }
+        }
+
+        function increment($event, granularity) {
+            $event.preventDefault();
+            
+            if (!isEnabled(granularity)) 
+                return;
+                
+            //why clone first?
+            var newDate = vm.currents.date.clone().add(vm.defaults.time.stepping[granularity] || 1, granularity);
+            vm.currents.date = newDate;
+            
+            updateModel();
+        }
+
+        function decrement($event, granularity) {
+            $event.preventDefault();
+            
+            if (!isEnabled(granularity)) 
+                return;
+            
+            
+            //why clone first?
+            var newDate = vm.currents.date.clone().subtract(vm.defaults.time.stepping[granularity] || 1, granularity);
+            vm.currents.date = newDate;
+            
+            updateModel();
+        }
+
+        function getCurrent(granularity) {
+            if (!isEnabled(granularity)) 
+                return;
+                
+            switch (granularity) {
+                case 'y':
+                    return vm.currents.date.clone().format('yyyy');
+                case 'M':
+                    return vm.currents.date.clone().format('MM');
+                case 'd':
+                    return vm.currents.date.clone().format('dd');
+                case 'h':
+                    if (vm.defaults.usePeriod) {
+                        return vm.currents.date.clone().format('hh');
+                    } else {
+                        return vm.currents.date.clone().format('HH');
+                    }
+                case 'm':
+                    return vm.currents.date.clone().format('mm');
+                case 's':
+                    return vm.currents.date.clone().format('ss');
+                default:
+                    return false;
+            }
+        }
+
+        function togglePeriod($event) {
+            $event.preventDefault();
+            
+            var newDate = vm.currents.date.clone().add((vm.currents.date.hours() >= 12) ? -12 : 12, 'h');
+            vm.currents.date = newDate;
+            
+            updateModel();
+        }
+
+        function getCurrentPeriod() {
+            return vm.currents.date.clone().format('a');
+        }
+
+        function getColumnWidthClass() {
+            var columnWidth = 12 / (isEnabled('h') + isEnabled('m') + isEnabled('s') + !vm.use24Hours);
+            return 'col-md-' + columnWidth; // either 12, 6, 4 or 3
+        }
     }
 })();
+
 (function() {
     'use strict';
 
@@ -379,6 +517,6 @@
     $templateCache.put('/source/templates/datepicker.month.html','<table class=\"kmd-datepicker-month\"><tr data-ng-repeat=\"trimester in vm.months\"><td data-ng-repeat=\"month in trimester\"><div class=\"kmd-button\" data-ng-bind=\"month.label\" data-ng-mousedown=\"vm.selectMonth($event, month.month)\"></div></td></tr></table>');
     $templateCache.put('/source/templates/datepicker.year.html','<table class=\"kmd-datepicker-year\"><tr data-ng-repeat=\"trimester in vm.years\"><td data-ng-repeat=\"year in trimester\"><div class=\"kmd-button\" data-ng-bind=\"year.label\" data-ng-mousedown=\"vm.selectYear($event, year.year)\"></div></td></tr></table>');
     $templateCache.put('/source/templates/picker_container.html','<div class=\"kmd-datetimepicker\" ng-include=\"vm.template\"></div>');
-    $templateCache.put('/source/templates/timepicker.html','<div class=\"kmd-timepicker\"></div>');
+    $templateCache.put('/source/templates/timepicker.html','<div class=\"kmd-timepicker\"><div class=\"kmd-row\" data-ng-if=\"vm.hasDate()\"><div class=\"kmd-button kmd-dateswitch\" data-ng-mousedown=\"vm.switchMode($event, \'date\')\"><i class=\"fa fa-fw fa-calendar\"></i></div></div><div class=\"kmd-row\"><table><tr><td data-ng-if=\"vm.isEnabled(\'h\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.increment($event, \'h\')\"><i class=\"fa fa-fw fa-chevron-up\"></i></div></td><td data-ng-if=\"vm.isEnabled(\'h\') && vm.isEnabled(\'m\')\"></td><td data-ng-if=\"vm.isEnabled(\'m\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.increment($event, \'m\')\"><i class=\"fa fa-fw fa-chevron-up\"></i></div></td><td data-ng-if=\"(vm.isEnabled(\'h\') || vm.isEnabled(\'m\')) && vm.isEnabled(\'s\')\"></td><td data-ng-if=\"vm.isEnabled(\'s\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.increment($event, \'s\')\"><i class=\"fa fa-fw fa-chevron-up\"></i></div></td><td data-ng-if=\"vm.defaults.usePeriod\"></td></tr><tr><td data-ng-if=\"vm.isEnabled(\'h\')\"><div class=\"kmd-button\" data-ng-bind=\"vm.getCurrent(\'h\')\"></div></td><td data-ng-if=\"vm.isEnabled(\'h\') && vm.isEnabled(\'m\')\">:</td><td data-ng-if=\"vm.isEnabled(\'m\')\"><div class=\"kmd-button\" data-ng-bind=\"vm.getCurrent(\'m\')\"></div></td><td data-ng-if=\"(vm.isEnabled(\'h\') || vm.isEnabled(\'m\')) && vm.isEnabled(\'s\')\">:</td><td data-ng-if=\"vm.isEnabled(\'s\')\"><div class=\"kmd-button\" data-ng-bind=\"vm.getCurrent(\'s\')\"></div></td><td data-ng-if=\"vm.defaults.usePeriod\"><div class=\"kmd-button kmd-button-active\" data-ng-bind=\"vm.getCurrentPeriod()\" data-ng-mousedown=\"vm.togglePeriod($event);\"></div></td></tr><tr><td data-ng-if=\"vm.isEnabled(\'h\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.decrement($event, \'h\')\"><i class=\"fa fa-fw fa-chevron-down\"></i></div></td><td data-ng-if=\"vm.isEnabled(\'h\') && vm.isEnabled(\'m\')\"></td><td data-ng-if=\"vm.isEnabled(\'m\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.decrement($event, \'m\')\"><i class=\"fa fa-fw fa-chevron-down\"></i></div></td><td data-ng-if=\"(vm.isEnabled(\'h\') || vm.isEnabled(\'m\')) && vm.isEnabled(\'s\')\"></td><td data-ng-if=\"vm.isEnabled(\'s\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.decrement($event, \'s\')\"><i class=\"fa fa-fw fa-chevron-down\"></i></div></td><td data-ng-if=\"vm.defaults.usePeriod\"></td></tr></table></div></div>');
   }]);
 })();

@@ -19,7 +19,7 @@
                DateFormat: 'DD-MM-YYYY',
                SwitchLabel_Day: 'MMMM YYYY',
                SwitchLabel_Month: 'YYYY',
-               DefaultOutput: 'DD-MM-YYYYTHH:mm:ss'
+               DefaultOutput: 'DD-MM-YYYYThh:mm:ss'
            })
            .constant('VIEW_LEVELS', {
                Date: {
