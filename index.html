@@ -2,12 +2,12 @@
     <head>
         <title>AngularJs - Date/Timepicker</title>
         
-        <link rel="stylesheet" href="./source/css/datetimepicker.css">
+        <link rel="stylesheet" href="./source/css/style.css">
         <link rel="stylesheet" href="./node_modules/font-awesome/css/font-awesome.css">
     </head>
     <body>
         <div ng-controller="testController as vm">
-            <input type="text" datetimepicker datetimepicker-options="vm.properties" />
+            <input type="text" datetimepicker datetimepicker-options="vm.properties" ng-model="vm.datum" />
         </div>
         
         <script src="./node_modules/angular/angular.min.js"></script>
@@ -16,7 +16,9 @@
         <script src="./source/js/datetimepicker.module.js"></script>
         <script src="./source/js/datetimepicker.controller.js"></script>
         <script src="./source/js/datetimepicker.directive.js"></script>
-        
+        <!--
+        <script src="./dist/datetimepicker.js"></script>
+        -->
         <script>
             angular.module('test', ['kmd-datetimepicker'])
                    .controller('testController', function() {
@@ -30,3 +32,30 @@
         </script>
     </body>
 </html>
+
+<!--
+    names of days to display in th
+        moment().day(indexOfDay).format('dd')
+        
+    first day of month
+        moment().subtract(moment().date() - 1, 'days')
+        
+    first day to be shown on calendar (based on first day of week)
+        moment().subtract(moment().date() - 1, 'days').day(startOfWeek - 7)        
+    
+    last day of month
+        moment().add(1, 'months').subtract(moment().day() + 1, 'days')
+        
+    last day to be shown on calendar (based on first day of week)
+        moment().add(1, 'months').subtract(moment().day() + 1, 'days').day(startOfWeek + 7).format()
+        
+        
+        
+    months to display in table (months are zero-indexed)
+        moment().month(indexOfMonth).format('MMM')
+    
+    
+    
+    years to display in table
+        moment().year() - 5    t.e.m.   moment().year() + 6
+-->

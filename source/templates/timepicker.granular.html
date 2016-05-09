@@ -1,7 +1,7 @@
 <div class="kmd-timepicker-granular"
      data-ng-if="vm.hasTime() && vm.currents.granularity">
   <div class="row kmd-timeswitch"
-       data-ng-mousedown="vm.showPicker('time')">
+       data-ng-mousedown="vm.switchMode($event, 'time')">
     <a class="btn">
       <i class="fa fa-clock-o"></i>
     </a>

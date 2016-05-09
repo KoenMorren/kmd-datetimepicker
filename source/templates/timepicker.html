@@ -1,126 +1,92 @@
 <div class="kmd-timepicker">
-  <div class="row kmd-dateswitch"
-       data-ng-if="vm.hasDate()"
-       data-ng-mousedown="vm.showPicker('date')">
-    <a class="btn">
-      <i class="fa fa-calendar"></i>
-    </a>
+    <!-- Switch-button for datepicker -->
+    <div class="kmd-row"
+         data-ng-if="vm.hasDate()">
+        <div class="kmd-button kmd-dateswitch"
+             data-ng-mousedown="vm.switchMode($event, 'date')">
+            <i class="fa fa-fw fa-calendar"></i>
+        </div>
   </div>
-  <div class="row kmd-timepicker-main">
-    <table class="table"
-           ng-init="columnWidth = vm.getColumnWidthClass()">
-      <tr class="row top-row">
-        <td class="col"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('h')"
-            data-ng-mousedown="vm.increment('h')">
-          <a class="btn">
-            <i class="fa fa-chevron-up"></i>
-          </a>
-        </td>
-        <td class="col seperator"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('m') && vm.isEnabled('h')"></td>
-        <td class="col"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('m')"
-            data-ng-mousedown="vm.increment('m')">
-          <a class="btn">
-            <i class="fa fa-chevron-up"></i>
-          </a>
-        </td>
-        <td class="col seperator"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('s') && (vm.isEnabled('m') || vm.isEnabled('h'))"></td>
-        <td class="col"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('s')"
-            data-ng-mousedown="vm.increment('s')">
-          <a class="btn">
-            <i class="fa fa-chevron-up"></i>
-          </a>
-        </td>
-        <td class="col seperator"
-            data-ng-class="columnWidth"
-            data-ng-if="!vm.use24Hours"></td>
-      </tr>
-      <tr class="row middle-row">
-        <td class="col"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('h')"
-            data-ng-mousedown="vm.showPicker('h')">
-          <a class="btn">
-            <span class="timepicker-hour"
-                  data-ng-bind="vm.getCurrent('h')"></span>
-          </a>
-        </td>
-        <td class="col seperator"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('m') && vm.isEnabled('h')">:</td>
-        <td class="col"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('m')"
-            data-ng-mousedown="vm.showPicker('m')">
-          <a class="btn">
-            <span class="timepicker-minute"
-                  data-ng-bind="vm.getCurrent('m')"></span>
-          </a>
-        </td>
-        <td class="col seperator"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('s') && (vm.isEnabled('m') || vm.isEnabled('h'))">:</td>
-        <td class="col"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('s')"
-            data-ng-mousedown="vm.showPicker('s')">
-          <a class="btn">
-            <span class="timepicker-second"
-                  data-ng-bind="vm.getCurrent('s')"></span>
-          </a>
-        </td>
-        <td class="col"
-            data-ng-class="columnWidth"
-            data-ng-if="!vm.use24Hours"
-            data-ng-mousedown="vm.togglePeriod()">
-          <button class="btn btn-primary" type="button"
-                  data-ng-bind="vm.getCurrentPeriod()"></button>
-        </td>
-      </tr>
-      <tr class="row bottom-row">
-        <td class="col"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('h')"
-            data-ng-mousedown="vm.decrement('h')">
-          <a class="btn">
-            <i class="fa fa-chevron-down"></i>
-          </a>
-        </td>
-        <td class="col seperator"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('m') && vm.isEnabled('h')"></td>
-        <td class="col"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('m')"
-            data-ng-mousedown="vm.increment('m')">
-          <a class="btn">
-            <i class="fa fa-chevron-down"></i>
-          </a>
-        </td>
-        <td class="col seperator"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('s') && (vm.isEnabled('m') || vm.isEnabled('h'))"></td>
-        <td class="col"
-            data-ng-class="columnWidth"
-            data-ng-if="vm.isEnabled('s')"
-            data-ng-mousedown="vm.increment('s')">
-          <a class="btn">
-            <i class="fa fa-chevron-down"></i>
-          </a>
-        </td>
-        <td class="col seperator"
-            data-ng-class="columnWidth"
-            data-ng-if="!vm.use24Hours"></td>
-      </tr>
-    </table>
-  </div>
+  <!-- Content-window for timepicker -->
+  <div class="kmd-row">
+      <table>
+          <!-- Increment -->
+          <tr>
+              <td data-ng-if="vm.isEnabled('h')">
+                  <div class="kmd-button"
+                       data-ng-mousedown="vm.increment($event, 'h')">
+                      <i class="fa fa-fw fa-chevron-up"></i>
+                  </div>
+              </td>
+              <td data-ng-if="vm.isEnabled('h') && vm.isEnabled('m')"></td>
+              <td data-ng-if="vm.isEnabled('m')">
+                  <div class="kmd-button"
+                       data-ng-mousedown="vm.increment($event, 'm')">
+                      <i class="fa fa-fw fa-chevron-up"></i>
+                  </div>
+              </td>
+              <td data-ng-if="(vm.isEnabled('h') || vm.isEnabled('m')) && vm.isEnabled('s')"></td>
+              <td data-ng-if="vm.isEnabled('s')">
+                  <div class="kmd-button"
+                       data-ng-mousedown="vm.increment($event, 's')">
+                      <i class="fa fa-fw fa-chevron-up"></i>
+                  </div>
+              </td>
+              <td data-ng-if="vm.defaults.usePeriod"></td>
+          </tr>
+          <!-- Display -->
+          <tr>
+              <td data-ng-if="vm.isEnabled('h')">
+                  <div class="kmd-button"
+                       data-ng-bind="vm.getCurrent('h')"
+                     data-ng-mousedown="vm.switchMode($event, 'h')">
+                  </div>
+              </td>
+              <td data-ng-if="vm.isEnabled('h') && vm.isEnabled('m')">:</td>
+              <td data-ng-if="vm.isEnabled('m')">
+                  <div class="kmd-button"
+                     data-ng-bind="vm.getCurrent('m')"
+                     data-ng-mousedown="vm.switchMode($event, 'm')">
+                  </div>    
+              </td>
+              <td data-ng-if="(vm.isEnabled('h') || vm.isEnabled('m')) && vm.isEnabled('s')">:</td>
+              <td data-ng-if="vm.isEnabled('s')">
+                  <div class="kmd-button"
+                     data-ng-bind="vm.getCurrent('s')"
+                     data-ng-mousedown="vm.switchMode($event, 's')">
+                  </div>
+              </td>
+              <td data-ng-if="vm.defaults.usePeriod">
+                  <div class="kmd-button kmd-button-active"
+                       data-ng-bind="vm.getCurrentPeriod()"
+                       data-ng-mousedown="vm.togglePeriod($event);">
+                  </div>
+              </td>
+          </tr>
+          <!-- Decrement -->
+          <tr>
+              <td data-ng-if="vm.isEnabled('h')">
+                  <div class="kmd-button"
+                       data-ng-mousedown="vm.decrement($event, 'h')">
+                      <i class="fa fa-fw fa-chevron-down"></i>
+                  </div>
+              </td>
+              <td data-ng-if="vm.isEnabled('h') && vm.isEnabled('m')"></td>
+              <td data-ng-if="vm.isEnabled('m')">
+                  <div class="kmd-button"
+                       data-ng-mousedown="vm.decrement($event, 'm')">
+                      <i class="fa fa-fw fa-chevron-down"></i>
+                  </div>
+              </td>
+              <td data-ng-if="(vm.isEnabled('h') || vm.isEnabled('m')) && vm.isEnabled('s')"></td>
+              <td data-ng-if="vm.isEnabled('s')">
+                  <div class="kmd-button"
+                       data-ng-mousedown="vm.decrement($event, 's')">
+                      <i class="fa fa-fw fa-chevron-down"></i>
+                  </div>
+              </td>
+              <td data-ng-if="vm.defaults.usePeriod"></td>
+          </tr>
+      </table>
+    </div>
 </div>

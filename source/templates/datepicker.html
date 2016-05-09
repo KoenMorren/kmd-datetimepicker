@@ -1,64 +1,27 @@
 <div class="kmd-datepicker">
+    <!-- Header -->
     <div class="kmd-row">
-        <div class="kmd-button kmd-prev">
-            <!--
-                ng-mousedown
-            -->
+        <div class="kmd-button kmd-prev"
+             data-ng-mousedown="vm.datepickerPrevious($event)">
             <i class="fa fa-fw fa-chevron-left"></i>
         </div>
-        <div class="kmd-button kmd-switch">
-            <!--
-                ng-mousedown
-                ng-bind
-             -->
-             May 2016
+        <div class="kmd-button kmd-switch"
+             data-ng-mousedown="vm.decreaseDatepickerViewLevel($event)"
+             data-ng-bind="vm.currents.datepickerSwitchLabel">
         </div>
-        <div class="kmd-button kmd-next">
-            <!--
-                ng-mousedown
-            -->
+        <div class="kmd-button kmd-next"
+             data-ng-mousedown="vm.datepickerNext($event)">
             <i class="fa fa-fw fa-chevron-right"></i>
         </div>
     </div>
+    <!-- Content-window for datepicker -->
     <div class="kmd-row" data-ng-include="vm.dateSelectionTemplate">
-        <!--
-           ng-include for template based on view (day, month, year) 
-        -->
     </div>
-    <div class="kmd-row">
-        <div class="kmd-button kmd-timeswitch">
-            <!--
-                ng-if
-                ng-mousedown    
-            -->
+    <!-- Switch-button for timepicker -->
+    <div class="kmd-row"> <!-- ng-if -->
+        <div class="kmd-button kmd-timeswitch"
+             data-ng-mousedown="vm.switchMode($event, 'time')">
             <i class="fa fa-fw fa-clock-o"></i>
         </div>
     </div>
 </div>
-
-<!--
-    names of days to display in th
-        moment().day(indexOfDay).format('dd')
-        
-    first day of month
-        moment().subtract(moment().date() - 1, 'days')
-        
-    first day to be shown on calendar (based on first day of week)
-        moment().subtract(moment().date() - 1, 'days').day(startOfWeek - 7)        
-    
-    last day of month
-        moment().add(1, 'months').subtract(moment().day() + 1, 'days')
-        
-    last day to be shown on calendar (based on first day of week)
-        moment().add(1, 'months').subtract(moment().day() + 1, 'days').day(startOfWeek + 7).format()
-        
-        
-        
-    months to display in table (months are zero-indexed)
-        moment().month(indexOfMonth).format('MMM')
-    
-    
-    
-    years to display in table
-        moment().year() - 5    t.e.m.   moment().year() + 6
--->

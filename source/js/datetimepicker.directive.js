@@ -10,7 +10,8 @@
         var directive = {
             scope: {},
             bindToController: {
-                options: '=datetimepickerOptions'
+                options: '=datetimepickerOptions',
+                ngModel: '='
             },
             controller: 'datetimepickerController',
             controllerAs: 'vm',
