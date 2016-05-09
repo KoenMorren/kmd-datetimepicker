@@ -1,0 +1,25 @@
+<div class="kmd-timepicker-granular"
+     data-ng-if="vm.hasTime() && vm.currents.granularity">
+  <div class="row kmd-timeswitch"
+       data-ng-mousedown="vm.showPicker('time')">
+    <a class="btn">
+      <i class="fa fa-clock-o"></i>
+    </a>
+  </div>
+  <div class="row"
+       data-ng-if="vm.isEnabled(vm.currents.granularity)">
+    <table class="table"
+           data-ng-init="rows = vm.getValues(vm.currents.granularity)">
+      <tr class="row"
+          data-ng-repeat="row in rows">
+        <td class="col col-md-3"
+            data-ng-repeat="col in row"
+            data-ng-mousedown="vm.setValue(vm.currents.granularity, col.value)">
+          <a class="btn">
+            <span data-ng-bind="col.label"></span>
+          </a>
+        <td>
+      </tr>
+    </table>
+  </div>
+</div>
