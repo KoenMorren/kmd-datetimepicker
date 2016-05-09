@@ -449,44 +449,57 @@
         }
 
         function getCurrentPeriod() {
-            return vm.currents.date.clone().format('a');
+            return vm.currents.date.clone().format('A');
         }
 
         function getValues(granularity) {
             if (!isEnabled(granularity)) return;
+            var step = vm.defaults.time.stepping[granularity] || 1,
+                columCount = vm.defaults.time.columnCount[granularity] || 4;
+            var values;
             switch (granularity) {
                 case 'h':
-                    var minHour = 1,
-                            maxHour = vm.use24Hours ? 24 : 12,
-                            hourStep = vm.defaults.time.stepping[granularity] || 1,
-                            hourColCount = vm.defaults.time.columnCount[granularity] || 4;
-                    return fillKeyValues(minHour, maxHour, hourStep, hourColCount);
+                    if (vm.defaults.usePeriod) {
+                        values = [{name: '12', value: 12}].concat(createNameValueArray(step, 11, step));
+                        return createRowColumnArray(values, columCount);
+                    } else {
+                        values = createNameValueArray(0, 23, step);
+                        return createRowColumnArray(values, columCount);
+                    }
                 case 'm':
                 case 's':
-                    var min = 0,
-                            max = 59,
-                            step = vm.defaults.time.stepping[granularity] || 1,
-                            columnCount = vm.defaults.time.columnCount[granularity] || 4;
-                    return fillKeyValues(min, max, step, columnCount);
+                    values = createNameValueArray(0, 59, step);
+                    return createRowColumnArray(values, columCount);
                 default:
                     return false;
             }
         }
 
-        function fillKeyValues(minValue, maxValue, stepSize, columnCount) {
-            var rowCount = maxValue / stepSize / columnCount;
-            var rows = [];
-            for (var row  = 0; row < rowCount; row++) {
-                var cols = [];
-                for (var col = minValue, len = columnCount + minValue; col < len; col++) {
-                    var hourValue = col * stepSize + row * columnCount * stepSize;
-                    if (hourValue > maxValue) break;
-                    var hour = {
-                        value: hourValue,
-                        label: ('00' + hourValue).slice(-2)
+        function createNameValueArray(minValue, maxValue, step) {
+            var arr = [];
+            for (var i = minValue, len = maxValue; i <= len; i += step) {
+                arr[arr.length] = {
+                    name: ('00' + i).slice(-2),
+                    value: i
+                };
+            }
+            return arr;
+        }
+
+        function createRowColumnArray(keyValueArray, columnCount) {
+            var rows = [],
+                ilen = keyValueArray.length / columnCount;
+            for (var i = 0; i < ilen; i++) {
+                var cols = [],
+                    jlen = columnCount;
+                for (var j = 0; j < jlen; j++) {
+                    //var row = i, col = j;
+                    var index = i * columnCount + j;
+                    if (keyValueArray[index]) {
+                        cols[cols.length] = keyValueArray[index];
+                    } else {
+                        break;
                     }
-                    cols[cols.length] = hour;
-                    if (hourValue === maxValue) break;
                 }
                 rows[rows.length] = cols;
             }
@@ -495,6 +508,18 @@
 
         function setValue($event, granularity, val) {
             $event.preventDefault();
+
+            if (granularity === 'h' && vm.defaults.usePeriod) {
+                if (vm.currents.date.hours() >= 12) {
+                    if (val !== 12) {
+                        val += 12;
+                    } 
+                } else {
+                    if (val === 12) {
+                        val = 0;
+                    }
+                }
+            }
             
             vm.currents.date.set(granularity, val);
             updateModel();

@@ -484,44 +484,57 @@
         }
 
         function getCurrentPeriod() {
-            return vm.currents.date.clone().format('a');
+            return vm.currents.date.clone().format('A');
         }
 
         function getValues(granularity) {
             if (!isEnabled(granularity)) return;
+            var step = vm.defaults.time.stepping[granularity] || 1,
+                columCount = vm.defaults.time.columnCount[granularity] || 4;
+            var values;
             switch (granularity) {
                 case 'h':
-                    var minHour = 1,
-                            maxHour = vm.use24Hours ? 24 : 12,
-                            hourStep = vm.defaults.time.stepping[granularity] || 1,
-                            hourColCount = vm.defaults.time.columnCount[granularity] || 4;
-                    return fillKeyValues(minHour, maxHour, hourStep, hourColCount);
+                    if (vm.defaults.usePeriod) {
+                        values = [{name: '12', value: 12}].concat(createNameValueArray(step, 11, step));
+                        return createRowColumnArray(values, columCount);
+                    } else {
+                        values = createNameValueArray(0, 23, step);
+                        return createRowColumnArray(values, columCount);
+                    }
                 case 'm':
                 case 's':
-                    var min = 0,
-                            max = 59,
-                            step = vm.defaults.time.stepping[granularity] || 1,
-                            columnCount = vm.defaults.time.columnCount[granularity] || 4;
-                    return fillKeyValues(min, max, step, columnCount);
+                    values = createNameValueArray(0, 59, step);
+                    return createRowColumnArray(values, columCount);
                 default:
                     return false;
             }
         }
 
-        function fillKeyValues(minValue, maxValue, stepSize, columnCount) {
-            var rowCount = maxValue / stepSize / columnCount;
-            var rows = [];
-            for (var row  = 0; row < rowCount; row++) {
-                var cols = [];
-                for (var col = minValue, len = columnCount + minValue; col < len; col++) {
-                    var hourValue = col * stepSize + row * columnCount * stepSize;
-                    if (hourValue > maxValue) break;
-                    var hour = {
-                        value: hourValue,
-                        label: ('00' + hourValue).slice(-2)
+        function createNameValueArray(minValue, maxValue, step) {
+            var arr = [];
+            for (var i = minValue, len = maxValue; i <= len; i += step) {
+                arr[arr.length] = {
+                    name: ('00' + i).slice(-2),
+                    value: i
+                };
+            }
+            return arr;
+        }
+
+        function createRowColumnArray(keyValueArray, columnCount) {
+            var rows = [],
+                ilen = keyValueArray.length / columnCount;
+            for (var i = 0; i < ilen; i++) {
+                var cols = [],
+                    jlen = columnCount;
+                for (var j = 0; j < jlen; j++) {
+                    //var row = i, col = j;
+                    var index = i * columnCount + j;
+                    if (keyValueArray[index]) {
+                        cols[cols.length] = keyValueArray[index];
+                    } else {
+                        break;
                     }
-                    cols[cols.length] = hour;
-                    if (hourValue === maxValue) break;
                 }
                 rows[rows.length] = cols;
             }
@@ -530,6 +543,18 @@
 
         function setValue($event, granularity, val) {
             $event.preventDefault();
+
+            if (granularity === 'h' && vm.defaults.usePeriod) {
+                if (vm.currents.date.hours() >= 12) {
+                    if (val !== 12) {
+                        val += 12;
+                    } 
+                } else {
+                    if (val === 12) {
+                        val = 0;
+                    }
+                }
+            }
             
             vm.currents.date.set(granularity, val);
             updateModel();
@@ -537,7 +562,6 @@
         }
     }
 })();
-
 (function() {
     'use strict';
 
@@ -572,7 +596,7 @@
     $templateCache.put('/source/templates/datepicker.month.html','<table class=\"kmd-datepicker-month\"><tr data-ng-repeat=\"trimester in vm.months\"><td data-ng-repeat=\"month in trimester\"><div class=\"kmd-button\" data-ng-bind=\"month.label\" data-ng-mousedown=\"vm.selectMonth($event, month.month)\"></div></td></tr></table>');
     $templateCache.put('/source/templates/datepicker.year.html','<table class=\"kmd-datepicker-year\"><tr data-ng-repeat=\"trimester in vm.years\"><td data-ng-repeat=\"year in trimester\"><div class=\"kmd-button\" data-ng-bind=\"year.label\" data-ng-mousedown=\"vm.selectYear($event, year.year)\"></div></td></tr></table>');
     $templateCache.put('/source/templates/picker_container.html','<div class=\"kmd-datetimepicker\" ng-include=\"vm.template\"></div>');
-    $templateCache.put('/source/templates/timepicker.granular.html','<div class=\"kmd-timepicker\" data-ng-if=\"vm.hasTime() && vm.currents.granularity\"><div class=\"kmd-row\"><div class=\"kmd-button kmd-timeswitch\" data-ng-mousedown=\"vm.switchMode($event, \'time\')\"><i class=\"fa fa-fw fa-clock-o\"></i></div></div><div class=\"kmd-row\" data-ng-if=\"vm.isEnabled(vm.currents.granularity)\"><table data-ng-init=\"rows = vm.getValues(vm.currents.granularity)\"><tr data-ng-repeat=\"row in rows\"><td data-ng-repeat=\"col in row\"><div class=\"kmd-button\" data-ng-bind=\"col.label\" data-ng-mousedown=\"vm.setValue($event, vm.currents.granularity, col.value)\"></div></td></tr></table></div></div>');
+    $templateCache.put('/source/templates/timepicker.granular.html','<div class=\"kmd-timepicker\" data-ng-if=\"vm.hasTime() && vm.currents.granularity\"><div class=\"kmd-row\"><div class=\"kmd-button kmd-timeswitch\" data-ng-mousedown=\"vm.switchMode($event, \'time\')\"><i class=\"fa fa-fw fa-clock-o\"></i></div></div><div class=\"kmd-row\" data-ng-if=\"vm.isEnabled(vm.currents.granularity)\"><table data-ng-init=\"rows = vm.getValues(vm.currents.granularity)\"><tr data-ng-repeat=\"row in rows\"><td data-ng-repeat=\"col in row\"><div class=\"kmd-button\" data-ng-bind=\"col.name\" data-ng-mousedown=\"vm.setValue($event, vm.currents.granularity, col.value)\"></div></td></tr></table></div></div>');
     $templateCache.put('/source/templates/timepicker.html','<div class=\"kmd-timepicker\"><div class=\"kmd-row\" data-ng-if=\"vm.hasDate()\"><div class=\"kmd-button kmd-dateswitch\" data-ng-mousedown=\"vm.switchMode($event, \'date\')\"><i class=\"fa fa-fw fa-calendar\"></i></div></div><div class=\"kmd-row\"><table><tr><td data-ng-if=\"vm.isEnabled(\'h\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.increment($event, \'h\')\"><i class=\"fa fa-fw fa-chevron-up\"></i></div></td><td data-ng-if=\"vm.isEnabled(\'h\') && vm.isEnabled(\'m\')\"></td><td data-ng-if=\"vm.isEnabled(\'m\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.increment($event, \'m\')\"><i class=\"fa fa-fw fa-chevron-up\"></i></div></td><td data-ng-if=\"(vm.isEnabled(\'h\') || vm.isEnabled(\'m\')) && vm.isEnabled(\'s\')\"></td><td data-ng-if=\"vm.isEnabled(\'s\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.increment($event, \'s\')\"><i class=\"fa fa-fw fa-chevron-up\"></i></div></td><td data-ng-if=\"vm.defaults.usePeriod\"></td></tr><tr><td data-ng-if=\"vm.isEnabled(\'h\')\"><div class=\"kmd-button\" data-ng-bind=\"vm.getCurrent(\'h\')\" data-ng-mousedown=\"vm.switchMode($event, \'h\')\"></div></td><td data-ng-if=\"vm.isEnabled(\'h\') && vm.isEnabled(\'m\')\">:</td><td data-ng-if=\"vm.isEnabled(\'m\')\"><div class=\"kmd-button\" data-ng-bind=\"vm.getCurrent(\'m\')\" data-ng-mousedown=\"vm.switchMode($event, \'m\')\"></div></td><td data-ng-if=\"(vm.isEnabled(\'h\') || vm.isEnabled(\'m\')) && vm.isEnabled(\'s\')\">:</td><td data-ng-if=\"vm.isEnabled(\'s\')\"><div class=\"kmd-button\" data-ng-bind=\"vm.getCurrent(\'s\')\" data-ng-mousedown=\"vm.switchMode($event, \'s\')\"></div></td><td data-ng-if=\"vm.defaults.usePeriod\"><div class=\"kmd-button kmd-button-active\" data-ng-bind=\"vm.getCurrentPeriod()\" data-ng-mousedown=\"vm.togglePeriod($event);\"></div></td></tr><tr><td data-ng-if=\"vm.isEnabled(\'h\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.decrement($event, \'h\')\"><i class=\"fa fa-fw fa-chevron-down\"></i></div></td><td data-ng-if=\"vm.isEnabled(\'h\') && vm.isEnabled(\'m\')\"></td><td data-ng-if=\"vm.isEnabled(\'m\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.decrement($event, \'m\')\"><i class=\"fa fa-fw fa-chevron-down\"></i></div></td><td data-ng-if=\"(vm.isEnabled(\'h\') || vm.isEnabled(\'m\')) && vm.isEnabled(\'s\')\"></td><td data-ng-if=\"vm.isEnabled(\'s\')\"><div class=\"kmd-button\" data-ng-mousedown=\"vm.decrement($event, \'s\')\"><i class=\"fa fa-fw fa-chevron-down\"></i></div></td><td data-ng-if=\"vm.defaults.usePeriod\"></td></tr></table></div></div>');
   }]);
 })();

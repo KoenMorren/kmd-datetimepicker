@@ -14,7 +14,7 @@
             <tr data-ng-repeat="row in rows">
                 <td data-ng-repeat="col in row">
                     <div class="kmd-button"
-                         data-ng-bind="col.label"
+                         data-ng-bind="col.name"
                          data-ng-mousedown="vm.setValue($event, vm.currents.granularity, col.value)">
                     </div>
                 </td>

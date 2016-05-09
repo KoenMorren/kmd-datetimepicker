@@ -137,4 +137,5 @@ table td .kmd-button {
 .kmd-timepicker .kmd-button-active {
   color: #ffffff;
   background-color: #1976D2 !important;
+  text-transform: uppercase;
 }
