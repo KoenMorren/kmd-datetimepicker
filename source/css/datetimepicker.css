@@ -71,9 +71,11 @@
 
 .kmd-dateswitch {
     width: calc(100% - 12px);
+    color: #1976D2;
 }
 .kmd-timeswitch {
     width: calc(100% - 12px);
+    color: #1976D2;
 }
 
 table {
