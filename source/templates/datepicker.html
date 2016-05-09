@@ -25,30 +25,3 @@
         </div>
     </div>
 </div>
-
-<!--
-    names of days to display in th
-        moment().day(indexOfDay).format('dd')
-        
-    first day of month
-        moment().subtract(moment().date() - 1, 'days')
-        
-    first day to be shown on calendar (based on first day of week)
-        moment().subtract(moment().date() - 1, 'days').day(startOfWeek - 7)        
-    
-    last day of month
-        moment().add(1, 'months').subtract(moment().day() + 1, 'days')
-        
-    last day to be shown on calendar (based on first day of week)
-        moment().add(1, 'months').subtract(moment().day() + 1, 'days').day(startOfWeek + 7).format()
-        
-        
-        
-    months to display in table (months are zero-indexed)
-        moment().month(indexOfMonth).format('MMM')
-    
-    
-    
-    years to display in table
-        moment().year() - 5    t.e.m.   moment().year() + 6
--->
