@@ -45,6 +45,7 @@
         
         vm.defaults = {
             startOfWeek: 0,
+            disableWeekdays: [0],
             outputFormat: FORMATS.DefaultOutput
         };
         vm.currents = {
@@ -65,7 +66,8 @@
             dateSelectionTemplate: TEMPLATES.DatePart.Day,
                         
             isCurrentDay: isCurrentDay,
-            isSelectedDay: isSelectedDay
+            isSelectedDay: isSelectedDay,
+            isDisabled: isDisabled
         });
         
         //Exposing functions
@@ -81,10 +83,7 @@
 
         activate();
 
-        function activate() {
-            console.log(vm);
-            console.log(vm.ngModel);
-            
+        function activate() {            
             applyOptions();
             generateTemplate();
             generateDaysOfWeek();
@@ -115,6 +114,23 @@
                 index = ++index%7;
             } while(index !== vm.defaults.startOfWeek)
         }
+        function generateYears() {
+            vm.currents.minYear = vm.currents.viewDate.year() - 5;
+            vm.currents.maxYear = vm.currents.viewDate.year() + 6;
+            vm.years = [];
+            
+            for(var i = 0; i < 3; i++) {
+                vm.years[i] = [];    
+                for(var j = 0; j < 4; j++) {
+                    var year = vm.currents.minYear + (i * 4) + j;
+                    
+                    vm.years[i][j] = {
+                        label: year,
+                        year: year
+                    }; 
+                }
+            }
+        }
         function generateMonths() {
             if(vm.defaults.alternativeMonthLabels) {
                 //TODO
@@ -134,23 +150,6 @@
                 }
             }
         }
-        function generateYears() {
-            vm.currents.minYear = vm.currents.viewDate.year() - 5;
-            vm.currents.maxYear = vm.currents.viewDate.year() + 6;
-            vm.years = [];
-            
-            for(var i = 0; i < 3; i++) {
-                vm.years[i] = [];    
-                for(var j = 0; j < 4; j++) {
-                    var year = vm.currents.minYear + (i * 4) + j;
-                    
-                    vm.years[i][j] = {
-                        label: year,
-                        year: year
-                    }; 
-                }
-            }
-        }
         function generateDaysInMonth() {
             var temp = [];
             vm.daysOnCalendar = [];
@@ -162,7 +161,8 @@
                 temp[temp.length] = {
                     label: begin.date(),
                     date: begin.clone(),
-                    inSelectedMonth: begin.clone().month() - vm.currents.viewDate.month() === 0
+                    inSelectedMonth: begin.clone().month() - vm.currents.viewDate.month() === 0,
+                    isDisabled: isDisabled(begin.clone())
                 };
                 
                 begin.add(1, 'days');
@@ -221,6 +221,18 @@
         function isSelectedDay(day) {
             return day.isSame(vm.currents.viewDate, 'day');
         }
+        function isDisabled(day) {
+            //check if not < mindate
+            var minDateBlock = false;
+            
+            //check if > maxdate
+            var maxDateBlock = false;
+            
+            //check if day.day() not in vm.defaults.disableWeekdays
+            var weekdayBlock = vm.defaults.disableWeekdays.indexOf(day.day()) !== -1;
+            
+            return minDateBlock || maxDateBlock || weekdayBlock;
+        }
         function updateModel() {
             vm.ngModel = vm.currents.date.format(vm.defaults.outputFormat);
         }
@@ -269,14 +281,16 @@
             increaseDatepickerViewLevel();
             generateDaysInMonth();
         }
-        function selectDay($event, day) {
+        function selectDay($event, isDisabled, day) {
             $event.preventDefault();
             
-            vm.currents.viewDate.set('year', day.year());
-            vm.currents.viewDate.set('month', day.month());
-            vm.currents.viewDate.set('date', day.date());
-            vm.currents.date = vm.currents.viewDate.clone();
-            updateModel();            
+            if(!isDisabled) {
+                vm.currents.viewDate.set('year', day.year());
+                vm.currents.viewDate.set('month', day.month());
+                vm.currents.viewDate.set('date', day.date());
+                vm.currents.date = vm.currents.viewDate.clone();
+                updateModel();   
+            }            
         }
         function datepickerNext($event) {
             $event.preventDefault();
@@ -360,7 +374,7 @@
 
   angular.module('kmd-datetimepicker')
          .run(['$templateCache', function($templateCache) {
-    $templateCache.put('/source/templates/datepicker.day.html','<table class=\"kmd-datepicker-day\"><tr><th data-ng-repeat=\"day in vm.daysOfWeek\" data-ng-bind=\"day\"></th></tr><tr data-ng-repeat=\"week in vm.daysOnCalendar\"><td data-ng-repeat=\"day in week\"><div class=\"kmd-button\" data-ng-bind=\"day.label\" data-ng-class=\"{\'day-not-in-selected-month\': !day.inSelectedMonth, \'day-is-today\': vm.isCurrentDay(day.date), \'day-is-selected\': vm.isSelectedDay(day.date)}\" data-ng-mousedown=\"vm.selectDay($event, day.date)\"></div></td></tr></table>');
+    $templateCache.put('/source/templates/datepicker.day.html','<table class=\"kmd-datepicker-day\"><tr><th data-ng-repeat=\"day in vm.daysOfWeek\" data-ng-bind=\"day\"></th></tr><tr data-ng-repeat=\"week in vm.daysOnCalendar\"><td data-ng-repeat=\"day in week\"><div class=\"kmd-button\" data-ng-bind=\"day.label\" data-ng-class=\"{\'day-not-in-selected-month\': !day.inSelectedMonth, \'day-is-today\': vm.isCurrentDay(day.date), \'day-is-selected\': vm.isSelectedDay(day.date), \'day-is-disabled\': day.isDisabled}\" data-ng-mousedown=\"vm.selectDay($event, day.isDisabled, day.date)\"></div></td></tr></table>');
     $templateCache.put('/source/templates/datepicker.html','<div class=\"kmd-datepicker\"><div class=\"kmd-row\"><div class=\"kmd-button kmd-prev\" data-ng-mousedown=\"vm.datepickerPrevious($event)\"><i class=\"fa fa-fw fa-chevron-left\"></i></div><div class=\"kmd-button kmd-switch\" data-ng-mousedown=\"vm.decreaseDatepickerViewLevel($event)\" data-ng-bind=\"vm.currents.datepickerSwitchLabel\"></div><div class=\"kmd-button kmd-next\" data-ng-mousedown=\"vm.datepickerNext($event)\"><i class=\"fa fa-fw fa-chevron-right\"></i></div></div><div class=\"kmd-row\" data-ng-include=\"vm.dateSelectionTemplate\"></div><div class=\"kmd-row\"><div class=\"kmd-button kmd-timeswitch\" data-ng-mousedown=\"vm.switchMode($event, \'time\')\"><i class=\"fa fa-fw fa-clock-o\"></i></div></div></div>');
     $templateCache.put('/source/templates/datepicker.month.html','<table class=\"kmd-datepicker-month\"><tr data-ng-repeat=\"trimester in vm.months\"><td data-ng-repeat=\"month in trimester\"><div class=\"kmd-button\" data-ng-bind=\"month.label\" data-ng-mousedown=\"vm.selectMonth($event, month.month)\"></div></td></tr></table>');
     $templateCache.put('/source/templates/datepicker.year.html','<table class=\"kmd-datepicker-year\"><tr data-ng-repeat=\"trimester in vm.years\"><td data-ng-repeat=\"year in trimester\"><div class=\"kmd-button\" data-ng-bind=\"year.label\" data-ng-mousedown=\"vm.selectYear($event, year.year)\"></div></td></tr></table>');

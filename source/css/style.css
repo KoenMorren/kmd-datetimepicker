@@ -124,3 +124,7 @@ table td .kmd-button {
 .day-is-selected {
   background-color: #1976D2 !important;
 }
+
+.day-is-disabled {
+  cursor: not-allowed;
+}
