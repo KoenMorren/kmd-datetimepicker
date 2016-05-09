@@ -41,7 +41,8 @@
             selectDay: selectDay,
             decreaseDatepickerViewLevel: decreaseDatepickerViewLevel,
             datepickerNext: datepickerNext,
-            datepickerPrevious: datepickerPrevious
+            datepickerPrevious: datepickerPrevious,
+            switchMode: switchMode
         });
 
         activate();
@@ -280,6 +281,19 @@
             }
             
             updateDatepickerSwitchLabel();
+        }
+        function switchMode($event, mode) {
+            $event.preventDefault();
+            
+            switch(mode) {
+                case 'date':
+                    vm.template = TEMPLATES.Date;
+                    vm.dateSelectionTemplate = TEMPLATES.DatePart.Day;
+                    break;
+                case 'time':
+                    vm.template = TEMPLATES.Time;
+                    break;
+            }
         }
     }
 })();
