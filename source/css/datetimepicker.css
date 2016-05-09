@@ -10,7 +10,8 @@
     
     -webkit-user-select: none;
     
-    width: 15em;
+    width: 18em;
+    font-family: verdana;
 }
 .kmd-datetimepicker:before {
     content: '';
@@ -52,6 +53,7 @@
     float: left;
     cursor: pointer;
     height: 18px;
+    position: relative;
 }
 .kmd-button:hover {
     background-color: lightgrey;
@@ -93,4 +95,28 @@ table td .kmd-button {
 .kmd-datepicker-year td .kmd-button { 
     width: 100%;
     padding: 12px 0;
+}
+
+.day-not-in-selected-month {
+    color: #BDBDBD;
+}
+.day-is-today:before {
+    content: '';
+    display: inline-block;
+    position: absolute;
+    
+    border-top: 4px solid transparent;
+    border-left: 4px solid transparent;
+    border-right: 4px solid black;
+    border-bottom: 4px solid black;
+    border-bottom-right-radius: 2px;
+    bottom: 4px;
+    right: 4px;
+}
+.day-is-today.day-is-selected:before {
+    border-right-color: #ffffff;
+    border-bottom-color: #ffffff;
+}
+.day-is-selected {
+    background-color: #1976D2 !important;
 }
