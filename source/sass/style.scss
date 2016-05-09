@@ -1,0 +1,91 @@
+@import 'variables.scss';
+
+.kmd-datetimepicker {
+    position: relative;
+    box-sizing: border-box;
+    
+    margin: 2px 0 0 0;
+    padding: 4px;
+    
+    border: 1px solid lightgrey;
+    border-radius: 4px;
+    
+    -webkit-user-select: none;
+    
+    width: 18em;
+    font-family: verdana;
+    
+    &:before, &:after {
+        content: '';
+        display: inline-block;
+        position: absolute;
+    }
+    &:before {
+        border-left: 7px solid transparent;
+        border-right: 7px solid transparent;
+        border-bottom: 7px solid lightgrey;
+        border-bottom-color: lightgrey;
+        
+        top: -7px;
+        left: 7px;
+    }
+    &:after {
+        border-left: 6px solid transparent;
+        border-right: 6px solid transparent;
+        border-bottom: 6px solid white;
+        
+        top: -6px;
+        left: 8px;
+    }
+}
+
+.kmd-row {
+    overflow: hidden;
+    clear: both;
+    margin: 0 0 6px 0;
+    
+    &:last-child {
+        margin: 0px;
+    }
+}
+
+.kmd-button {
+    border-radius: 4px;
+    padding: 6px;    
+    text-align: center;
+    float: left;
+    cursor: pointer;
+    height: 18px;
+    position: relative;
+    
+    &:hover {
+        background-color: lightgrey;    
+    }
+}
+
+.kmd-dateswitch,
+.kmd-timeswitch {
+    width: calc(100% - 12px);
+    color: #1976D2;
+}
+
+table {
+    width: 100%;
+    table-layout: fixed;
+    border-collapse: collapse;
+    
+    th {
+        cursor: default;
+    }
+    td {
+        text-align: center;
+        
+        .kmd-button {
+            width: 100%;
+            padding: 6px 0;
+        }
+    }
+}
+
+@import 'datepicker.scss';
+@import 'timepicker.scss';
