@@ -15,7 +15,7 @@
 }
 
 .day-not-in-selected-month {
-    color: #BDBDBD;
+    color: $font-color-other-month;
 }
 .day-is-today {    
     &:before {
@@ -25,21 +25,23 @@
         
         border-top: 4px solid transparent;
         border-left: 4px solid transparent;
-        border-right: 4px solid black;
-        border-bottom: 4px solid black;
+        border-right: 4px solid $today-caret-color;
+        border-bottom: 4px solid $today-caret-color;
         border-bottom-right-radius: 2px;
         bottom: 4px;
         right: 4px;
     }
     
     &.day-is-selected:before {
-        border-right-color: #ffffff;
-        border-bottom-color: #ffffff;
+        border-right-color: $today-selected-caret-color;
+        border-bottom-color: $today-selected-caret-color;
     }
 }
 .day-is-selected {
-    background-color: #1976D2 !important;
+    color: $selected-day-color !important;
+    background-color: $selected-day-background-color !important;
 }
 .day-is-disabled {
+    color: $font-color-disabled;
     cursor: not-allowed;
 }

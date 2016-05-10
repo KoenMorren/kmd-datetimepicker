@@ -1,4 +1,4 @@
-@import 'variables.scss';
+@import 'theme.scss';
 
 .kmd-datetimepicker {
     position: absolute;
@@ -7,9 +7,9 @@
     margin: 2px 0 0 0;
     padding: 4px;
     
-    border: 1px solid lightgrey;
+    border: 1px solid $border-color;
     border-radius: 4px;
-    background-color: white;
+    background-color: $background-color;
     
     -webkit-user-select: none;
     
@@ -24,8 +24,8 @@
     &:before {
         border-left: 7px solid transparent;
         border-right: 7px solid transparent;
-        border-bottom: 7px solid lightgrey;
-        border-bottom-color: lightgrey;
+        border-bottom: 7px solid $border-color;
+        border-bottom-color: $border-color;
         
         top: -7px;
         left: 7px;
@@ -33,7 +33,7 @@
     &:after {
         border-left: 6px solid transparent;
         border-right: 6px solid transparent;
-        border-bottom: 6px solid white;
+        border-bottom: 6px solid $background-color;
         
         top: -6px;
         left: 8px;
@@ -60,14 +60,14 @@
     position: relative;
     
     &:hover {
-        background-color: lightgrey;    
+        background-color: $button-hover-background-color;    
     }
 }
 
 .kmd-dateswitch,
 .kmd-timeswitch {
     width: calc(100% - 12px);
-    color: #1976D2;
+    color: $button-font-color;
 }
 
 table {

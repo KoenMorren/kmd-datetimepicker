@@ -5,7 +5,7 @@
   padding: 4px;
   border: 1px solid lightgrey;
   border-radius: 4px;
-  background-color: white;
+  background-color: #ffffff;
   -webkit-user-select: none;
   width: 18em;
   font-family: verdana;
@@ -29,7 +29,7 @@
 .kmd-datetimepicker:after {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
-  border-bottom: 6px solid white;
+  border-bottom: 6px solid #ffffff;
   top: -6px;
   left: 8px;
 }
@@ -101,7 +101,7 @@ table td .kmd-button {
 }
 
 .day-not-in-selected-month {
-  color: #BDBDBD;
+  color: lightgrey;
 }
 
 .day-is-today:before {
@@ -110,8 +110,8 @@ table td .kmd-button {
   position: absolute;
   border-top: 4px solid transparent;
   border-left: 4px solid transparent;
-  border-right: 4px solid black;
-  border-bottom: 4px solid black;
+  border-right: 4px solid #000000;
+  border-bottom: 4px solid #000000;
   border-bottom-right-radius: 2px;
   bottom: 4px;
   right: 4px;
@@ -123,10 +123,12 @@ table td .kmd-button {
 }
 
 .day-is-selected {
+  color: #ffffff !important;
   background-color: #1976D2 !important;
 }
 
 .day-is-disabled {
+  color: lightgrey;
   cursor: not-allowed;
 }
 
