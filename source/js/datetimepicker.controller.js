@@ -5,8 +5,8 @@
         .module('kmd-datetimepicker')
         .controller('datetimepickerController', datetimepickerController);
 
-    datetimepickerController.$inject = ['$scope', '$compile', '$document', '$templateRequest', 'FORMATS', 'VIEW_LEVELS', 'TEMPLATES'];
-    function datetimepickerController($scope, $compile, $document, $templateRequest, FORMATS, VIEW_LEVELS, TEMPLATES) {
+    datetimepickerController.$inject = ['$scope', '$compile', '$document', '$templateRequest', '$element', 'FORMATS', 'VIEW_LEVELS', 'TEMPLATES'];
+    function datetimepickerController($scope, $compile, $document, $templateRequest, $element, FORMATS, VIEW_LEVELS, TEMPLATES) {
         var vm = this;
         
         vm.defaults = {
@@ -35,7 +35,8 @@
             date: moment(),
             viewDate: moment(),
             datepickerViewLevel: VIEW_LEVELS.Date.Day,
-            datepickerSwitchLabel: null
+            datepickerSwitchLabel: null,
+            isVisible: false
         };
         
         //Exposing properties
@@ -80,7 +81,9 @@
 
         activate();
 
-        function activate() {            
+        function activate() {    
+            attachListeners();
+                    
             applyOptions();
             generateTemplate();
             generateDaysOfWeek();
@@ -89,6 +92,18 @@
              
             updateDatepickerSwitchLabel();
             updateModel();
+        }
+        
+        //attach listeners to the target control
+        function attachListeners() {
+            $element.bind('focus', function() {
+                vm.currents.isVisible = true;
+                $scope.$apply();
+            });
+            $element.bind('blur', function() {
+                vm.currents.isVisible = false;
+                $scope.$apply();
+            })
         }
         
         function applyOptions() {
