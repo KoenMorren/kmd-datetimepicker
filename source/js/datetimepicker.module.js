@@ -31,5 +31,13 @@
                    2: 'Day', 
                    Day: 2                   
                }
+           })
+           .constant('ICONS',  {
+               previous: 'icon-chevron-left',
+               next: 'icon-chevron-right',
+               up: 'icon-chevron-up',
+               down: 'icon-chevron-down',
+               calendar: 'icon-calendar-o',
+               clock: 'icon-clock-o'  
            });
 })();

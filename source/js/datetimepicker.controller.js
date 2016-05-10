@@ -5,8 +5,8 @@
         .module('kmd-datetimepicker')
         .controller('datetimepickerController', datetimepickerController);
 
-    datetimepickerController.$inject = ['$scope', '$compile', '$document', '$templateRequest', '$element', 'FORMATS', 'VIEW_LEVELS', 'TEMPLATES'];
-    function datetimepickerController($scope, $compile, $document, $templateRequest, $element, FORMATS, VIEW_LEVELS, TEMPLATES) {
+    datetimepickerController.$inject = ['$scope', '$compile', '$document', '$templateRequest', '$element', '$timeout', 'FORMATS', 'VIEW_LEVELS', 'TEMPLATES', 'ICONS'];
+    function datetimepickerController($scope, $compile, $document, $templateRequest, $element, $timeout, FORMATS, VIEW_LEVELS, TEMPLATES, ICONS) {
         var vm = this;
         
         vm.defaults = {
@@ -22,25 +22,21 @@
             usePeriod: true
         };
         
-        vm.icons = {
-            previous: 'icon-chevron-left',
-            next: 'icon-chevron-right',
-            up: 'icon-chevron-up',
-            down: 'icon-chevron-down',
-            calendar: 'icon-calendar-o',
-            clock: 'icon-clock-o'  
-        };
-        
         vm.currents = {
             date: moment(),
             viewDate: moment(),
             datepickerViewLevel: VIEW_LEVELS.Date.Day,
             datepickerSwitchLabel: null,
-            isVisible: false
+            isVisible: false,
+            position: {
+                top: '100px',
+                left: '100px'
+            }
         };
         
         //Exposing properties
         angular.extend(vm, {
+            icons: ICONS,            
             daysOfWeek: null,
             daysOnCalendar: null,
             months: null,
@@ -83,9 +79,10 @@
 
         function activate() {    
             attachListeners();
+            generateTemplate();
+            determinePosition();
                     
             applyOptions();
-            generateTemplate();
             generateDaysOfWeek();
             generateMonths();
             generateDaysInMonth();
@@ -97,6 +94,13 @@
         //attach listeners to the target control
         function attachListeners() {
             $element.bind('focus', function() {
+                //reset the picker to the default view
+                vm.template = TEMPLATES.Date;
+                vm.dateSelectionTemplate = TEMPLATES.DatePart.Day;
+                vm.currents.datepickerViewLevel = VIEW_LEVELS.Date.Day;
+                updateDatepickerSwitchLabel();
+                generateDaysInMonth();
+                
                 vm.currents.isVisible = true;
                 $scope.$apply();
             });
@@ -105,6 +109,18 @@
                 $scope.$apply();
             })
         }
+        //add the picker template to the body
+        function generateTemplate() {
+            $templateRequest(TEMPLATES.Base).then(function(html) {
+                var picker = $compile(html)($scope);                
+                $document.find('body').append(picker);
+            });
+        }
+        //determine the offset of the picker
+        function determinePosition() {
+            vm.currents.position.top = $element.prop('offsetTop') + $element.prop('offsetHeight') + 'px';
+            vm.currents.position.left = $element.prop('offsetLeft') + 'px';        
+        }
         
         function applyOptions() {
             //loop over all options in vm.options
@@ -112,12 +128,6 @@
             //else throw error 'option not supported'
             
             vm.defaults.usePeriod = !has24Hours();
-        }
-        function generateTemplate() {
-            $templateRequest(TEMPLATES.Base).then(function(html) {
-                var picker = $compile(html)($scope);
-                $document.find('body').append(picker); 
-            });
         }
         function generateDaysOfWeek() {
             var index = vm.defaults.startOfWeek;
@@ -169,28 +179,24 @@
             vm.daysOnCalendar = [];
             
             var begin = generateBeginOfMonth();
-            var end = generateEndOfMonth();            
+            var end = generateEndOfMonth();
             
-            while(begin.diff(end, 'days') < 0) {
-                temp[temp.length] = {
-                    label: begin.date(),
-                    date: begin.clone(),
-                    inSelectedMonth: begin.clone().month() - vm.currents.viewDate.month() === 0
-                };
+            for(var i = 0; i < end.diff(begin, 'days') / 7; i ++) {
+                vm.daysOnCalendar[i] = [];
                 
-                begin.add(1, 'days');
-            }
-            
-            for(var i = 0; i < temp.length / 7; i++) {
-                var week = [];
-                
-                for(var j = 0; j < 7; j++) {
-                    week[week.length] = temp[(i * 7) + j];
+                for(var j = 1; j <= 7; j++) {                    
+                    vm.daysOnCalendar[i][j - 1] = createDayFromMoment(begin.clone().add(((i * 7) + j), 'days'));
                 }
                 
-                vm.daysOnCalendar[i] = week;
             }
         }
+        function createDayFromMoment(moment) {
+            return {
+                label: moment.date(),
+                date: moment,
+                inSelectedMonth: moment.month() - vm.currents.viewDate.month() === 0  
+            };
+        }        
         function generateBeginOfMonth() {
             var clone = vm.currents.viewDate.clone();
             var begin = clone.subtract(clone.date() - 1, 'days');
