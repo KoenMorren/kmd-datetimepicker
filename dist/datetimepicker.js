@@ -140,6 +140,7 @@
                 //reset the picker to the default view
                 vm.template = TEMPLATES.Date;
                 vm.dateSelectionTemplate = TEMPLATES.DatePart.Day;
+                vm.currents.viewDate = moment();
                 vm.currents.datepickerViewLevel = VIEW_LEVELS.Date.Day;
                 updateDatepickerSwitchLabel();
                 generateDaysInMonth();
@@ -227,8 +228,8 @@
             for(var i = 0; i < end.diff(begin, 'days') / 7; i ++) {
                 vm.daysOnCalendar[i] = [];
                 
-                for(var j = 1; j <= 7; j++) {                    
-                    vm.daysOnCalendar[i][j - 1] = createDayFromMoment(begin.clone().add(((i * 7) + j), 'days'));
+                for(var j = 0; j <= 6; j++) {                    
+                    vm.daysOnCalendar[i][j] = createDayFromMoment(begin.clone().add(((i * 7) + j), 'days'));
                 }
                 
             }
@@ -259,7 +260,7 @@
             if(end.clone().add(1, 'days').day() !== vm.defaults.startOfWeek) {
                 end.day(vm.defaults.startOfWeek + 7)
             } else {
-                end.day(vm.defaults.startOfWeek);
+                end.add(1, 'days').day(vm.defaults.startOfWeek);
             }
             
             return end;
