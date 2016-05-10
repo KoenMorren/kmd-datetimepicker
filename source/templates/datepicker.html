@@ -3,7 +3,7 @@
     <div class="kmd-row">
         <div class="kmd-button kmd-prev"
              data-ng-mousedown="vm.datepickerPrevious($event)">
-            <i class="fa fa-fw fa-chevron-left"></i>
+            <i data-ng-class="vm.icons.previous"></i>
         </div>
         <div class="kmd-button kmd-switch"
              data-ng-mousedown="vm.decreaseDatepickerViewLevel($event)"
@@ -11,7 +11,7 @@
         </div>
         <div class="kmd-button kmd-next"
              data-ng-mousedown="vm.datepickerNext($event)">
-            <i class="fa fa-fw fa-chevron-right"></i>
+            <i data-ng-class="vm.icons.next"></i>
         </div>
     </div>
     <!-- Content-window for datepicker -->
@@ -21,7 +21,7 @@
     <div class="kmd-row"> <!-- ng-if -->
         <div class="kmd-button kmd-timeswitch"
              data-ng-mousedown="vm.switchMode($event, 'time')">
-            <i class="fa fa-fw fa-clock-o"></i>
+            <i data-ng-class="vm.icons.clock"></i>
         </div>
     </div>
 </div>

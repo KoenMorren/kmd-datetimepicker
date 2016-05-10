@@ -12,17 +12,23 @@
         vm.defaults = {
             startOfWeek: 0,
             outputFormat: FORMATS.DefaultOutput,
-            //timepicker
             time: {
                 stepping: {
                     m: 5,
                     s: 5
                 },
-                columnCount: {
-
-                }
+                columnCount: {}
             }, 
             usePeriod: true
+        };
+        
+        vm.icons = {
+            previous: 'icon-chevron-left',
+            next: 'icon-chevron-right',
+            up: 'icon-chevron-up',
+            down: 'icon-chevron-down',
+            calendar: 'icon-calendar-o',
+            clock: 'icon-clock-o'  
         };
         
         vm.currents = {
@@ -50,13 +56,6 @@
             hasDate: hasDate,
             hasTime: hasTime,
             isEnabled: isEnabled,
-            increment: increment,
-            decrement: decrement,
-            getCurrent: getCurrent,
-            togglePeriod: togglePeriod,
-            getCurrentPeriod: getCurrentPeriod,
-            getValues: getValues,
-            setValue: setValue
         });
         
         //Exposing functions
@@ -67,7 +66,16 @@
             decreaseDatepickerViewLevel: decreaseDatepickerViewLevel,
             datepickerNext: datepickerNext,
             datepickerPrevious: datepickerPrevious,
-            switchMode: switchMode
+            switchMode: switchMode,
+            
+            //timepicker
+            increment: increment,
+            decrement: decrement,
+            getCurrent: getCurrent,
+            togglePeriod: togglePeriod,
+            getCurrentPeriod: getCurrentPeriod,
+            getValues: getValues,
+            setValue: setValue
         });
 
         activate();
