@@ -126,8 +126,12 @@
             determinePosition();
                     
             applyOptions();
+            
+            setDefaultTemplate();
+            
             generateDaysOfWeek();
             generateMonths();
+            
             generateDaysInMonth();
              
             updateDatepickerSwitchLabel();
@@ -138,10 +142,8 @@
         function attachListeners() {
             $element.bind('focus', function() {
                 //reset the picker to the default view
-                vm.template = TEMPLATES.Date;
-                vm.dateSelectionTemplate = TEMPLATES.DatePart.Day;
+                setDefaultTemplate();
                 vm.currents.viewDate = moment();
-                vm.currents.datepickerViewLevel = VIEW_LEVELS.Date.Day;
                 updateDatepickerSwitchLabel();
                 generateDaysInMonth();
                 
@@ -173,6 +175,18 @@
             
             vm.defaults.usePeriod = !has24Hours();
         }
+        function setDefaultTemplate() {
+            if(hasDate()) {
+                vm.template = TEMPLATES.Date;
+                vm.dateSelectionTemplate = TEMPLATES.DatePart.Day;
+                vm.currents.datepickerViewLevel = VIEW_LEVELS.Date.Day;
+            } else if (!hasDate() && hasTime()) {
+                vm.template = TEMPLATES.Time;
+            } else {
+                throw new Error('Unable to set template. The format is not valid for either date or time.');
+            }
+        }
+        
         function generateDaysOfWeek() {
             var index = vm.defaults.startOfWeek;
             vm.daysOfWeek = [];
@@ -630,7 +644,7 @@
   angular.module('kmd-datetimepicker')
          .run(['$templateCache', function($templateCache) {
     $templateCache.put('/source/templates/datepicker.day.html','<table class=\"kmd-datepicker-day\"><tr><th data-ng-repeat=\"day in vm.daysOfWeek\" data-ng-bind=\"day\"></th></tr><tr data-ng-repeat=\"week in vm.daysOnCalendar\"><td data-ng-repeat=\"day in week\"><div class=\"kmd-button\" data-ng-bind=\"day.label\" data-ng-class=\"{\'day-not-in-selected-month\': !day.inSelectedMonth, \'day-is-today\': vm.isCurrentDay(day.date), \'day-is-selected\': vm.isSelectedDay(day.date), \'day-is-disabled\': day.isDisabled}\" data-ng-mousedown=\"vm.selectDay($event, day.isDisabled, day.date)\"></div></td></tr></table>');
-    $templateCache.put('/source/templates/datepicker.html','<div class=\"kmd-datepicker\"><div class=\"kmd-row\"><div class=\"kmd-button kmd-prev\" data-ng-mousedown=\"vm.datepickerPrevious($event)\"><i data-ng-class=\"vm.icons.previous\"></i></div><div class=\"kmd-button kmd-switch\" data-ng-mousedown=\"vm.decreaseDatepickerViewLevel($event)\" data-ng-bind=\"vm.currents.datepickerSwitchLabel\"></div><div class=\"kmd-button kmd-next\" data-ng-mousedown=\"vm.datepickerNext($event)\"><i data-ng-class=\"vm.icons.next\"></i></div></div><div class=\"kmd-row\" data-ng-include=\"vm.dateSelectionTemplate\"></div><div class=\"kmd-row\"><div class=\"kmd-button kmd-timeswitch\" data-ng-mousedown=\"vm.switchMode($event, \'time\')\"><i data-ng-class=\"vm.icons.clock\"></i></div></div></div>');
+    $templateCache.put('/source/templates/datepicker.html','<div class=\"kmd-datepicker\"><div class=\"kmd-row\"><div class=\"kmd-button kmd-prev\" data-ng-mousedown=\"vm.datepickerPrevious($event)\"><i data-ng-class=\"vm.icons.previous\"></i></div><div class=\"kmd-button kmd-switch\" data-ng-mousedown=\"vm.decreaseDatepickerViewLevel($event)\" data-ng-bind=\"vm.currents.datepickerSwitchLabel\"></div><div class=\"kmd-button kmd-next\" data-ng-mousedown=\"vm.datepickerNext($event)\"><i data-ng-class=\"vm.icons.next\"></i></div></div><div class=\"kmd-row\" data-ng-include=\"vm.dateSelectionTemplate\"></div><div class=\"kmd-row\" data-ng-if=\"vm.hasTime()\"><div class=\"kmd-button kmd-timeswitch\" data-ng-mousedown=\"vm.switchMode($event, \'time\')\"><i data-ng-class=\"vm.icons.clock\"></i></div></div></div>');
     $templateCache.put('/source/templates/datepicker.month.html','<table class=\"kmd-datepicker-month\"><tr data-ng-repeat=\"trimester in vm.months\"><td data-ng-repeat=\"month in trimester\"><div class=\"kmd-button\" data-ng-bind=\"month.label\" data-ng-mousedown=\"vm.selectMonth($event, month.month)\"></div></td></tr></table>');
     $templateCache.put('/source/templates/datepicker.year.html','<table class=\"kmd-datepicker-year\"><tr data-ng-repeat=\"trimester in vm.years\"><td data-ng-repeat=\"year in trimester\"><div class=\"kmd-button\" data-ng-bind=\"year.label\" data-ng-mousedown=\"vm.selectYear($event, year.year)\"></div></td></tr></table>');
     $templateCache.put('/source/templates/picker_container.html','<div class=\"kmd-datetimepicker\" data-ng-include=\"vm.template\" data-ng-show=\"vm.currents.isVisible\" data-ng-style=\"vm.currents.position\"></div>');

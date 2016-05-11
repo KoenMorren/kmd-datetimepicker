@@ -83,8 +83,12 @@
             determinePosition();
                     
             applyOptions();
+            
+            setDefaultTemplate();
+            
             generateDaysOfWeek();
             generateMonths();
+            
             generateDaysInMonth();
              
             updateDatepickerSwitchLabel();
@@ -95,10 +99,8 @@
         function attachListeners() {
             $element.bind('focus', function() {
                 //reset the picker to the default view
-                vm.template = TEMPLATES.Date;
-                vm.dateSelectionTemplate = TEMPLATES.DatePart.Day;
+                setDefaultTemplate();
                 vm.currents.viewDate = moment();
-                vm.currents.datepickerViewLevel = VIEW_LEVELS.Date.Day;
                 updateDatepickerSwitchLabel();
                 generateDaysInMonth();
                 
@@ -130,6 +132,18 @@
             
             vm.defaults.usePeriod = !has24Hours();
         }
+        function setDefaultTemplate() {
+            if(hasDate()) {
+                vm.template = TEMPLATES.Date;
+                vm.dateSelectionTemplate = TEMPLATES.DatePart.Day;
+                vm.currents.datepickerViewLevel = VIEW_LEVELS.Date.Day;
+            } else if (!hasDate() && hasTime()) {
+                vm.template = TEMPLATES.Time;
+            } else {
+                throw new Error('Unable to set template. The format is not valid for either date or time.');
+            }
+        }
+        
         function generateDaysOfWeek() {
             var index = vm.defaults.startOfWeek;
             vm.daysOfWeek = [];
