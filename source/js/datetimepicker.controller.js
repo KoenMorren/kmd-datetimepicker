@@ -9,6 +9,7 @@
     function datetimepickerController($scope, $compile, $document, $templateRequest, $element, $timeout, FORMATS, VIEW_LEVELS, TEMPLATES, ICONS) {
         var vm = this;
         
+        //Properties that can be overwritten by the user
         vm.defaults = {
             startOfWeek: 0,
             outputFormat: FORMATS.DefaultOutput,
@@ -22,6 +23,7 @@
             usePeriod: true
         };
         
+        //Properties used to hold the information about the current situation
         vm.currents = {
             date: moment(),
             viewDate: moment(),
@@ -29,8 +31,8 @@
             datepickerSwitchLabel: null,
             isVisible: false,
             position: {
-                top: '100px',
-                left: '100px'
+                top: null,
+                left: null
             }
         };
         
@@ -116,7 +118,7 @@
         function generateTemplate() {
             $templateRequest(TEMPLATES.Base).then(function(html) {
                 var picker = $compile(html)($scope);                
-                $document.find('body').append(picker);
+                $element.parent().append(picker);
             });
         }
         //determine the offset of the picker
@@ -125,10 +127,24 @@
             vm.currents.position.left = $element.prop('offsetLeft') + 'px';        
         }
         
-        function applyOptions() {
-            //loop over all options in vm.options
-            //if key in vm.options also exists in vm.defaults, overwrite value
-            //else throw error 'option not supported'
+        function applyOptions() {            
+            for (var property in vm.options) {
+                if (vm.options.hasOwnProperty(property)) {
+                    if(vm.defaults.hasOwnProperty(property)) {
+                        //switch for handling special cases
+                        switch(property) {
+                            case 'time':
+                                //loop over time-object
+                                break;
+                            default:
+                                vm.defaults[property] = vm.options[property];       
+                                break;
+                        }
+                    } else {
+                        throw new Error('kmd-datetimepicker: Unsupported option:' + property + '.');
+                    }
+                }
+            }
             
             vm.defaults.usePeriod = !has24Hours();
         }
