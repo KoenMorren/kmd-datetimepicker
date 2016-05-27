@@ -115,7 +115,7 @@
                 $scope.$apply();
             });
             $element.bind('blur', function() {
-                //vm.currents.isVisible = false;
+                vm.currents.isVisible = false;
                 $scope.$apply();
             })
         }
