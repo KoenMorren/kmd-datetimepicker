@@ -1,10 +1,10 @@
 <div class="kmd-timepicker">
     <!-- Switch-button for datepicker -->
     <div class="kmd-row"
-         data-ng-if="vm.hasDate()">
+         data-ng-if="dtpCtrl.hasDate()">
         <div class="kmd-button kmd-dateswitch"
-             data-ng-mousedown="vm.switchMode($event, 'date')">
-            <i data-ng-class="vm.icons.calendar"></i>
+             data-ng-mousedown="dtpCtrl.switchMode($event, 'date')">
+            <i data-ng-class="dtpCtrl.icons.calendar"></i>
         </div>
   </div>
   <!-- Content-window for timepicker -->
@@ -12,80 +12,80 @@
       <table>
           <!-- Increment -->
           <tr>
-              <td data-ng-if="vm.isEnabled('h')">
+              <td data-ng-if="dtpCtrl.isEnabled('h')">
                   <div class="kmd-button"
-                       data-ng-mousedown="vm.increment($event, 'h')">
-                      <i data-ng-class="vm.icons.up"></i>
+                       data-ng-mousedown="dtpCtrl.increment($event, 'h')">
+                      <i data-ng-class="dtpCtrl.icons.up"></i>
                   </div>
               </td>
-              <td data-ng-if="vm.isEnabled('h') && vm.isEnabled('m')"></td>
-              <td data-ng-if="vm.isEnabled('m')">
+              <td data-ng-if="dtpCtrl.isEnabled('h') && dtpCtrl.isEnabled('m')"></td>
+              <td data-ng-if="dtpCtrl.isEnabled('m')">
                   <div class="kmd-button"
-                       data-ng-mousedown="vm.increment($event, 'm')">
-                      <i data-ng-class="vm.icons.up"></i>
+                       data-ng-mousedown="dtpCtrl.increment($event, 'm')">
+                      <i data-ng-class="dtpCtrl.icons.up"></i>
                   </div>
               </td>
-              <td data-ng-if="(vm.isEnabled('h') || vm.isEnabled('m')) && vm.isEnabled('s')"></td>
-              <td data-ng-if="vm.isEnabled('s')">
+              <td data-ng-if="(dtpCtrl.isEnabled('h') || dtpCtrl.isEnabled('m')) && dtpCtrl.isEnabled('s')"></td>
+              <td data-ng-if="dtpCtrl.isEnabled('s')">
                   <div class="kmd-button"
-                       data-ng-mousedown="vm.increment($event, 's')">
-                      <i data-ng-class="vm.icons.up"></i>
+                       data-ng-mousedown="dtpCtrl.increment($event, 's')">
+                      <i data-ng-class="dtpCtrl.icons.up"></i>
                   </div>
               </td>
-              <td data-ng-if="vm.defaults.usePeriod"></td>
+              <td data-ng-if="dtpCtrl.defaults.usePeriod"></td>
           </tr>
           <!-- Display -->
           <tr>
-              <td data-ng-if="vm.isEnabled('h')">
+              <td data-ng-if="dtpCtrl.isEnabled('h')">
                   <div class="kmd-button"
-                       data-ng-bind="vm.getCurrent('h')"
-                     data-ng-mousedown="vm.switchMode($event, 'h')">
+                       data-ng-bind="dtpCtrl.getCurrent('h')"
+                     data-ng-mousedown="dtpCtrl.switchMode($event, 'h')">
                   </div>
               </td>
-              <td data-ng-if="vm.isEnabled('h') && vm.isEnabled('m')">:</td>
-              <td data-ng-if="vm.isEnabled('m')">
+              <td data-ng-if="dtpCtrl.isEnabled('h') && dtpCtrl.isEnabled('m')">:</td>
+              <td data-ng-if="dtpCtrl.isEnabled('m')">
                   <div class="kmd-button"
-                     data-ng-bind="vm.getCurrent('m')"
-                     data-ng-mousedown="vm.switchMode($event, 'm')">
+                     data-ng-bind="dtpCtrl.getCurrent('m')"
+                     data-ng-mousedown="dtpCtrl.switchMode($event, 'm')">
                   </div>    
               </td>
-              <td data-ng-if="(vm.isEnabled('h') || vm.isEnabled('m')) && vm.isEnabled('s')">:</td>
-              <td data-ng-if="vm.isEnabled('s')">
+              <td data-ng-if="(dtpCtrl.isEnabled('h') || dtpCtrl.isEnabled('m')) && dtpCtrl.isEnabled('s')">:</td>
+              <td data-ng-if="dtpCtrl.isEnabled('s')">
                   <div class="kmd-button"
-                     data-ng-bind="vm.getCurrent('s')"
-                     data-ng-mousedown="vm.switchMode($event, 's')">
+                     data-ng-bind="dtpCtrl.getCurrent('s')"
+                     data-ng-mousedown="dtpCtrl.switchMode($event, 's')">
                   </div>
               </td>
-              <td data-ng-if="vm.defaults.usePeriod">
+              <td data-ng-if="dtpCtrl.defaults.usePeriod">
                   <div class="kmd-button kmd-button-active"
-                       data-ng-bind="vm.getCurrentPeriod()"
-                       data-ng-mousedown="vm.togglePeriod($event);">
+                       data-ng-bind="dtpCtrl.getCurrentPeriod()"
+                       data-ng-mousedown="dtpCtrl.togglePeriod($event);">
                   </div>
               </td>
           </tr>
           <!-- Decrement -->
           <tr>
-              <td data-ng-if="vm.isEnabled('h')">
+              <td data-ng-if="dtpCtrl.isEnabled('h')">
                   <div class="kmd-button"
-                       data-ng-mousedown="vm.decrement($event, 'h')">
-                      <i data-ng-class="vm.icons.down"></i>
+                       data-ng-mousedown="dtpCtrl.decrement($event, 'h')">
+                      <i data-ng-class="dtpCtrl.icons.down"></i>
                   </div>
               </td>
-              <td data-ng-if="vm.isEnabled('h') && vm.isEnabled('m')"></td>
-              <td data-ng-if="vm.isEnabled('m')">
+              <td data-ng-if="dtpCtrl.isEnabled('h') && dtpCtrl.isEnabled('m')"></td>
+              <td data-ng-if="dtpCtrl.isEnabled('m')">
                   <div class="kmd-button"
-                       data-ng-mousedown="vm.decrement($event, 'm')">
-                      <i data-ng-class="vm.icons.down"></i>
+                       data-ng-mousedown="dtpCtrl.decrement($event, 'm')">
+                      <i data-ng-class="dtpCtrl.icons.down"></i>
                   </div>
               </td>
-              <td data-ng-if="(vm.isEnabled('h') || vm.isEnabled('m')) && vm.isEnabled('s')"></td>
-              <td data-ng-if="vm.isEnabled('s')">
+              <td data-ng-if="(dtpCtrl.isEnabled('h') || dtpCtrl.isEnabled('m')) && dtpCtrl.isEnabled('s')"></td>
+              <td data-ng-if="dtpCtrl.isEnabled('s')">
                   <div class="kmd-button"
-                       data-ng-mousedown="vm.decrement($event, 's')">
-                      <i data-ng-class="vm.icons.down"></i>
+                       data-ng-mousedown="dtpCtrl.decrement($event, 's')">
+                      <i data-ng-class="dtpCtrl.icons.down"></i>
                   </div>
               </td>
-              <td data-ng-if="vm.defaults.usePeriod"></td>
+              <td data-ng-if="dtpCtrl.defaults.usePeriod"></td>
           </tr>
       </table>
     </div>

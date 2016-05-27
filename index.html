@@ -29,8 +29,12 @@
         -->
         <script>
             angular.module('test', ['kmd-datetimepicker'])
-                   .controller('testController', function() {
+                   .controller('testController', function($scope) {
                        var vm = this;
+                       
+                       $scope.$watch(function() { return vm.datum; }, function() {
+                           console.log(vm.datum);
+                       });
                        
                        vm.properties = {
                            outputFormat: 'YYYY/MM/DD hh:mm:ss A'

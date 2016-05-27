@@ -1,9 +1,9 @@
 <table class="kmd-datepicker-month">
-    <tr data-ng-repeat="trimester in vm.months">
+    <tr data-ng-repeat="trimester in dtpCtrl.months">
         <td data-ng-repeat="month in trimester">
             <div class="kmd-button"
                  data-ng-bind="month.label"
-                 data-ng-mousedown="vm.selectMonth($event, month.month)">
+                 data-ng-mousedown="dtpCtrl.selectMonth($event, month.month)">
             </div> 
         </td>
     </tr>

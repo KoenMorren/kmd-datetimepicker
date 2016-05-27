@@ -2,27 +2,27 @@
     <!-- Header -->
     <div class="kmd-row">
         <div class="kmd-button kmd-prev"
-             data-ng-mousedown="vm.datepickerPrevious($event)">
-            <i data-ng-class="vm.icons.previous"></i>
+             data-ng-mousedown="dtpCtrl.datepickerPrevious($event)">
+            <i data-ng-class="dtpCtrl.icons.previous"></i>
         </div>
         <div class="kmd-button kmd-switch"
-             data-ng-mousedown="vm.decreaseDatepickerViewLevel($event)"
-             data-ng-bind="vm.currents.datepickerSwitchLabel">
+             data-ng-mousedown="dtpCtrl.decreaseDatepickerViewLevel($event)"
+             data-ng-bind="dtpCtrl.currents.datepickerSwitchLabel">
         </div>
         <div class="kmd-button kmd-next"
-             data-ng-mousedown="vm.datepickerNext($event)">
-            <i data-ng-class="vm.icons.next"></i>
+             data-ng-mousedown="dtpCtrl.datepickerNext($event)">
+            <i data-ng-class="dtpCtrl.icons.next"></i>
         </div>
     </div>
     <!-- Content-window for datepicker -->
-    <div class="kmd-row" data-ng-include="vm.dateSelectionTemplate">
+    <div class="kmd-row" data-ng-include="dtpCtrl.dateSelectionTemplate">
     </div>
     <!-- Switch-button for timepicker -->
     <div class="kmd-row"
-         data-ng-if="vm.hasTime()"> <!-- ng-if -->
+         data-ng-if="dtpCtrl.hasTime()"> <!-- ng-if -->
         <div class="kmd-button kmd-timeswitch"
-             data-ng-mousedown="vm.switchMode($event, 'time')">
-            <i data-ng-class="vm.icons.clock"></i>
+             data-ng-mousedown="dtpCtrl.switchMode($event, 'time')">
+            <i data-ng-class="dtpCtrl.icons.clock"></i>
         </div>
     </div>
 </div>

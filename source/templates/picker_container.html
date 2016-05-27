@@ -1,5 +1,6 @@
 <div class="kmd-datetimepicker" 
-     data-ng-include="vm.template"
-     data-ng-show="vm.currents.isVisible"
-     data-ng-style="vm.currents.position">
+     data-ng-include="dtpCtrl.template"
+     data-ng-show="dtpCtrl.currents.isVisible"
+     data-ng-style="dtpCtrl.currents.position"
+     data-ng-mousedown="dtpCtrl.disableMouseEventsOnContainer($event)">
 </div>

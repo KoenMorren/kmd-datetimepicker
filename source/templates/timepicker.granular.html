@@ -1,21 +1,21 @@
 <div class="kmd-timepicker"
-     data-ng-if="vm.hasTime() && vm.currents.granularity">
+     data-ng-if="dtpCtrl.hasTime() && dtpCtrl.currents.granularity">
     <!-- Switch-button for datepicker -->
     <div class="kmd-row">
         <div class="kmd-button kmd-timeswitch"
-             data-ng-mousedown="vm.switchMode($event, 'time')">
-            <i data-ng-class="vm.icons.clock"></i>
+             data-ng-mousedown="dtpCtrl.switchMode($event, 'time')">
+            <i data-ng-class="dtpCtrl.icons.clock"></i>
         </div>
     </div>
     <!-- Content-window -->
     <div class="kmd-row"
-         data-ng-if="vm.isEnabled(vm.currents.granularity)">
-        <table data-ng-init="rows = vm.getValues(vm.currents.granularity)">
+         data-ng-if="dtpCtrl.isEnabled(dtpCtrl.currents.granularity)">
+        <table data-ng-init="rows = dtpCtrl.getValues(dtpCtrl.currents.granularity)">
             <tr data-ng-repeat="row in rows">
                 <td data-ng-repeat="col in row">
                     <div class="kmd-button"
                          data-ng-bind="col.name"
-                         data-ng-mousedown="vm.setValue($event, vm.currents.granularity, col.value)">
+                         data-ng-mousedown="dtpCtrl.setValue($event, dtpCtrl.currents.granularity, col.value)">
                     </div>
                 </td>
             </tr>

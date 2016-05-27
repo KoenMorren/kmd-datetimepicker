@@ -59,6 +59,11 @@
         
         //Exposing functions
         angular.extend(vm, {
+            //container
+            applyOptions: applyOptions,
+            disableMouseEventsOnContainer: disableMouseEventsOnContainer,
+            
+            //datepicker
             selectYear: selectYear,
             selectMonth: selectMonth,
             selectDay: selectDay,
@@ -84,7 +89,7 @@
             generateTemplate();
             determinePosition();
                     
-            applyOptions();
+            //applyOptions();
             
             setDefaultTemplate();
             
@@ -94,7 +99,7 @@
             generateDaysInMonth();
              
             updateDatepickerSwitchLabel();
-            updateModel();
+            //updateModel();
         }
         
         //attach listeners to the target control
@@ -127,9 +132,9 @@
             vm.currents.position.left = $element.prop('offsetLeft') + 'px';        
         }
         
-        function applyOptions() {            
-            for (var property in vm.options) {
-                if (vm.options.hasOwnProperty(property)) {
+        function applyOptions() {
+            for (var property in $scope.datetimepickerOptions) {
+                if ($scope.datetimepickerOptions.hasOwnProperty(property)) {
                     if(vm.defaults.hasOwnProperty(property)) {
                         //switch for handling special cases
                         switch(property) {
@@ -137,7 +142,7 @@
                                 //loop over time-object
                                 break;
                             default:
-                                vm.defaults[property] = vm.options[property];       
+                                vm.defaults[property] = $scope.datetimepickerOptions[property];       
                                 break;
                         }
                     } else {
@@ -284,10 +289,13 @@
             return minDateBlock || maxDateBlock || weekdayBlock;
         }
         function updateModel() {
-            vm.ngModel = vm.currents.date.format(vm.defaults.outputFormat);
+            $scope.ngModel = vm.currents.date.format(vm.defaults.outputFormat);
         }
         
         //Functionality
+        function disableMouseEventsOnContainer($event) {
+            $event.preventDefault();
+        } 
         function decreaseDatepickerViewLevel($event) {
             $event.preventDefault();
             
