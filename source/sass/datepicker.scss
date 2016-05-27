@@ -1,11 +1,26 @@
 .kmd-prev,
 .kmd-next {
     width: 15%;
+    position: absolute;
+    top: 0;
+    padding-top: 8px;
+    padding-bottom: 7px;
+    height: 31px;
+    line-height: 20px;
+}
+.kmd-prev {
+    left: 0;
+}
+.kmd-next {
+    right: 0;
 }
 .kmd-switch {
-    margin: 0 2px;
+    margin: 0 auto;
     font-weight: bold;
-    width: calc(70% - 40px);
+    width: 68%;
+    float: none;
+    height: 31px;
+    line-height: 20px;
 }
 
 .kmd-datepicker-month td .kmd-button,
