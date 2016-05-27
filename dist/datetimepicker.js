@@ -155,20 +155,16 @@
                 determinePosition();
                 
                 angular.element($window).bind('resize', function() {
-                    blurEvents(); 
+                    $element[0].blur();
                 });
                 
                 vm.currents.isVisible = true;
                 $scope.$apply();
             });
             $element.bind('blur', function() {
-                blurEvents();
-            });
-            
-            function blurEvents() {
                 vm.currents.isVisible = false;
                 $scope.$apply();
-            }
+            });
         }
         //add the picker template to the body
         function generateTemplate() {
