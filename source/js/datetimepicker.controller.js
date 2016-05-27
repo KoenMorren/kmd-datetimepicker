@@ -5,8 +5,8 @@
         .module('kmd-datetimepicker')
         .controller('datetimepickerController', datetimepickerController);
 
-    datetimepickerController.$inject = ['$scope', '$compile', '$document', '$templateRequest', '$element', '$timeout', 'FORMATS', 'VIEW_LEVELS', 'TEMPLATES', 'ICONS'];
-    function datetimepickerController($scope, $compile, $document, $templateRequest, $element, $timeout, FORMATS, VIEW_LEVELS, TEMPLATES, ICONS) {
+    datetimepickerController.$inject = ['$scope', '$compile', '$window' ,'$document', '$templateRequest', '$element', '$timeout', 'FORMATS', 'VIEW_LEVELS', 'TEMPLATES', 'ICONS'];
+    function datetimepickerController($scope, $compile, $window, $document, $templateRequest, $element, $timeout, FORMATS, VIEW_LEVELS, TEMPLATES, ICONS) {
         var vm = this;
         
         //Properties that can be overwritten by the user
@@ -87,7 +87,6 @@
         function activate() {    
             attachListeners();
             generateTemplate();
-            determinePosition();
                     
             //applyOptions();
             
@@ -110,14 +109,23 @@
                 vm.currents.viewDate = moment();
                 updateDatepickerSwitchLabel();
                 generateDaysInMonth();
+                determinePosition();
+                
+                angular.element($window).bind('resize', function() {
+                    blurEvents(); 
+                });
                 
                 vm.currents.isVisible = true;
                 $scope.$apply();
             });
             $element.bind('blur', function() {
+                blurEvents();
+            });
+            
+            function blurEvents() {
                 vm.currents.isVisible = false;
                 $scope.$apply();
-            })
+            }
         }
         //add the picker template to the body
         function generateTemplate() {
