@@ -25,6 +25,7 @@
         
         //Properties used to hold the information about the current situation
         vm.currents = {
+            showLocation: 'show-under',
             date: moment(),
             viewDate: moment(),
             datepickerViewLevel: VIEW_LEVELS.Date.Day,
@@ -132,8 +133,23 @@
         }
         //determine the offset of the picker
         function determinePosition() {
-            vm.currents.position.top = $element.prop('offsetTop') + $element.prop('offsetHeight') + 'px';
-            vm.currents.position.left = $element.prop('offsetLeft') + 'px';        
+            var windowHeight = $window.innerHeight;
+            var offsetTop = $element.prop('offsetTop');
+            var elementHeight = $element.prop('offsetHeight');
+            var offsetBottom = windowHeight - (offsetTop + elementHeight);
+            
+            if(offsetBottom < 300) {
+                delete vm.currents.position.top;
+                vm.currents.position.bottom = (offsetBottom + elementHeight) + 'px';
+                vm.currents.showLocation = 'show-above';
+                
+            } else {
+                delete vm.currents.position.bottom;
+                vm.currents.position.top = (offsetTop + elementHeight) + 'px';
+                vm.currents.showLocation = 'show-under';
+            }        
+            
+            vm.currents.position.left = $element.prop('offsetLeft') + 'px';
         }
         
         function applyOptions() {

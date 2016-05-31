@@ -1,7 +1,7 @@
 .kmd-datetimepicker {
   position: absolute;
   box-sizing: border-box;
-  margin: 2px 0 0 0;
+  margin: 2px 0 2px 0;
   padding: 4px;
   border: 1px solid lightgrey;
   border-radius: 4px;
@@ -18,7 +18,7 @@
   position: absolute;
 }
 
-.kmd-datetimepicker:before {
+.kmd-datetimepicker.show-under:before {
   border-left: 7px solid transparent;
   border-right: 7px solid transparent;
   border-bottom: 7px solid lightgrey;
@@ -27,7 +27,7 @@
   left: 7px;
 }
 
-.kmd-datetimepicker:after {
+.kmd-datetimepicker.show-under:after {
   border-left: 6px solid transparent;
   border-right: 6px solid transparent;
   border-bottom: 6px solid #ffffff;
@@ -35,22 +35,39 @@
   left: 8px;
 }
 
+.kmd-datetimepicker.show-above:before {
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid lightgrey;
+  border-top-color: lightgrey;
+  bottom: -7px;
+  left: 7px;
+}
+
+.kmd-datetimepicker.show-above:after {
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  border-top: 6px solid #ffffff;
+  bottom: -6px;
+  left: 8px;
+}
+
 .kmd-datetimepicker * {
   box-sizing: border-box;
 }
 
-.kmd-row {
+.kmd-datetimepicker .kmd-row {
   overflow: hidden;
   clear: both;
   margin: 0 0 6px 0;
   position: relative;
 }
 
-.kmd-row:last-child {
+.kmd-datetimepicker .kmd-row:last-child {
   margin: 0px;
 }
 
-.kmd-button {
+.kmd-datetimepicker .kmd-button {
   border-radius: 4px;
   padding: 6px;
   text-align: center;
@@ -59,40 +76,40 @@
   position: relative;
 }
 
-.kmd-button:hover {
+.kmd-datetimepicker .kmd-button:hover {
   background-color: lightgrey;
 }
 
-.kmd-dateswitch,
-.kmd-timeswitch {
+.kmd-datetimepicker .kmd-dateswitch,
+.kmd-datetimepicker .kmd-timeswitch {
   width: 100%;
   color: #1976D2;
 }
 
-table {
+.kmd-datetimepicker table {
   width: 100%;
   table-layout: fixed;
   border-collapse: collapse;
 }
 
-table th {
+.kmd-datetimepicker table th {
   cursor: default;
 }
 
-table td {
+.kmd-datetimepicker table td {
   padding: 1px;
   text-align: center;
 }
 
-table td .kmd-button {
+.kmd-datetimepicker table td .kmd-button {
   width: 100%;
   height: 31px;
   line-height: 20px;
   padding: 6px 0;
 }
 
-.kmd-prev,
-.kmd-next {
+.kmd-datetimepicker .kmd-prev,
+.kmd-datetimepicker .kmd-next {
   width: 15%;
   position: absolute;
   top: 0;
@@ -102,15 +119,15 @@ table td .kmd-button {
   line-height: 20px;
 }
 
-.kmd-prev {
+.kmd-datetimepicker .kmd-prev {
   left: 0;
 }
 
-.kmd-next {
+.kmd-datetimepicker .kmd-next {
   right: 0;
 }
 
-.kmd-switch {
+.kmd-datetimepicker .kmd-switch {
   margin: 0 auto;
   font-weight: bold;
   width: 68%;
@@ -119,17 +136,17 @@ table td .kmd-button {
   line-height: 20px;
 }
 
-.kmd-datepicker-month td .kmd-button,
-.kmd-datepicker-year td .kmd-button {
+.kmd-datetimepicker .kmd-datepicker-month td .kmd-button,
+.kmd-datetimepicker .kmd-datepicker-year td .kmd-button {
   width: 100%;
   padding: 12px 0;
 }
 
-.day-not-in-selected-month {
+.kmd-datetimepicker .day-not-in-selected-month {
   color: #9E9E9E;
 }
 
-.day-is-today:before {
+.kmd-datetimepicker .day-is-today:before {
   content: '';
   display: inline-block;
   position: absolute;
@@ -142,27 +159,27 @@ table td .kmd-button {
   right: 3px;
 }
 
-.day-is-today.day-is-selected:before {
+.kmd-datetimepicker .day-is-today.day-is-selected:before {
   border-right-color: #ffffff;
   border-bottom-color: #ffffff;
 }
 
-.day-is-selected {
+.kmd-datetimepicker .day-is-selected {
   color: #ffffff !important;
   background-color: #1976D2 !important;
 }
 
-.day-is-disabled {
+.kmd-datetimepicker .day-is-disabled {
   color: lightgrey;
   cursor: not-allowed;
 }
 
-.kmd-timepicker table .kmd-button {
+.kmd-datetimepicker .kmd-timepicker table .kmd-button {
   height: 42px;
   padding-top: 12px;
 }
 
-.kmd-timepicker .kmd-button-active {
+.kmd-datetimepicker .kmd-timepicker .kmd-button-active {
   color: #ffffff;
   background-color: #1976D2 !important;
   text-transform: uppercase;
